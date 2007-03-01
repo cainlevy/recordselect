@@ -1,0 +1,54 @@
+.record-select {
+  width: 400px;
+  border: 1px solid #afd0f5;
+  font-family: sans-serif;
+}
+
+.record-select img {
+  border-width: 0px;
+}
+
+.record-select ol,
+.record-select li {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.record-select a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.record-select ol a {
+  display: block;
+  background-color: #e6f2ff;
+  padding: 2px 4px;
+}
+
+.record-select ol .even a {
+  background-color: #ffffff;
+}
+
+.record-select ol a:hover {
+  background-color: #ffff88;
+}
+
+.record-select .selected {
+  background-color: #b9dcff
+}
+
+.record-select .navigation {
+  text-align: right;
+  padding: 2px 4px;
+  font-size: 70%;
+  font-family: serif;
+  overflow: auto;
+  zoom: 1;
+}
+
+.record-select input {
+  float: left;
+  font-size: 100%;
+  width: 50%;
+}
