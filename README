@@ -14,5 +14,10 @@ side instead of server-side.
 
 To use RecordSelect in a RESTful API, add the following to your routes.rb:
 
-  map.resources :model_id, :collection => {:browse => :get, :select => :post},
+  map.resources :model_id, :collection => {:browse => :get},
                            :member => {:select => :post}
+
+DEPENDENCIES
+
+This depends on the excellent Paginator gem by Bruce Williams. This simple
+gem is available at paginator.rubyforge.org.

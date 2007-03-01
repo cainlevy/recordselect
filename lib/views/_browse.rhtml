@@ -1,0 +1,29 @@
+<div class="record-select" id="record-select-<%= params[:controller] -%>">
+  <div class="navigation">
+    <%= text_field_tag 'search', params[:search] %>
+    <%
+    prev_url = url_for(:action => :browse, :page => @page.prev.number) if @page.prev?
+    next_url = url_for(:action => :browse, :page => @page.next.number) if @page.next?
+    -%>
+    <%= link_to_remote 'Previous',
+                       {:url => prev_url, :method => :get,
+                        :success => "Element.replace('record-select-#{params[:controller]}', request.responseText)"},
+                       {:href => prev_url} if @page.prev? %>
+    <%= link_to_remote 'Next',
+                       {:url => next_url, :method => :get,
+                        :success => "Element.replace('record-select-#{params[:controller]}', request.responseText)"},
+                       {:href => next_url} if @page.next? %>
+  </div>
+  <ol>
+  <% @page.items.each do |record| -%>
+    <li>
+      <% url = url_for(:action => :select, :id => record.id) -%>
+      <%= link_to_remote record.respond_to?(:to_label) ? record.to_label : record.to_s,
+                         {:url => url,
+                          :method => :post,
+                          :before => 'Element.addClassName("selected", this)'},
+                         {:href => url} %>
+    </li>
+  <% end -%>
+  </ol>
+</div>
