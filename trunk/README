@@ -1,0 +1,18 @@
+Recordselect
+============
+
+(c) 2007 - Lance Ivy
+
+This ActiveScaffold-inspired plugin is a streamlined listing tool with a
+dedicated purpose: to let you select one (or more) records from a possibly
+large record set. It will report the selected record(s) to a given method
+on the controller.
+
+RecordSelect can also be used as a JavaScript widget. You can tie into a
+JavaScript hook that intercepts the selection report so it reports client-
+side instead of server-side.
+
+To use RecordSelect in a RESTful API, add the following to your routes.rb:
+
+  map.resources :model_id, :collection => {:browse => :get, :select => :post},
+                           :member => {:select => :post}
