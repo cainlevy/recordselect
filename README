@@ -1,23 +1,39 @@
-Recordselect
+RecordSelect
 ============
 
 (c) 2007 - Lance Ivy
 
-This ActiveScaffold-inspired plugin is a streamlined listing tool with a
-dedicated purpose: to let you select one (or more) records from a possibly
-large record set. It will report the selected record(s) to a given method
-on the controller.
+This plugin is a streamlined listing tool with a dedicated purpose: to let you select a record from a possibly large record set in a friendly fashion. It will report the selected record(s) to a given method on the controller or to a JavaScript function on the client.
 
-RecordSelect can also be used as a JavaScript widget. You can tie into a
-JavaScript hook that intercepts the selection report so it reports client-
-side instead of server-side.
+Included is a +link_to_record_select+ helper to assist with embedding a RecordSelect popup in your page. Also included is a +record_select_field+ helper. This helper ties RecordSelect into your form by making it set a hidden input field. Think of it as a paginated and searchable autocomplete dropdown. Or think of it as a <select> replacement that won't bog down with large recordsets.
 
-To use RecordSelect in a RESTful API, add the following to your routes.rb:
+To use RecordSelect RESTfully, add the following to your routes.rb:
 
   map.resources :model_id, :collection => {:browse => :get},
                            :member => {:select => :post}
 
-DEPENDENCIES
+= INSTALL
+1. Install from SVN:
 
-This depends on the excellent Paginator gem by Bruce Williams. This simple
-gem is available at paginator.rubyforge.org.
+   <tt>./script/plugin install http://recordselect.googlecode.com/svn/trunk</tt>
+
+2. Then add the css and javascript to your layout by including the following line:
+
+   <tt><%= record_select_includes %></tt>
+
+= EXAMPLES
+* <tt><%= link_to_record_select 'Try Me!', 'users', :onselect => 'alert("#" + id + ": " + label)' %></tt>
+
+  Creates a link that toggles a list of users. When clicked, it alerts the id and label of the user.
+
+* <tt><%= record_select_field 'user[user_group]', (@user.user_group || UserGroup.new) %></tt>
+
+  Creates a dropdown of user groups on your user form.
+
+= COMING SOON
+* Improved record_select_field UI. Instead of a <span> to hold the label, it will have a text field that acts as the search box. Behind the scenes it will still use a hidden input.
+* Better support for multi-select.
+* Automated tests. Maybe. Talk about a huge blind spot in my knowledge base...
+
+= DEPENDENCIES
+This depends on the excellent Paginator gem by Bruce Williams. This simple gem is available at paginator.rubyforge.org.
