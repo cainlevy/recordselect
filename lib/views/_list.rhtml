@@ -1,0 +1,17 @@
+<%
+controller ||= params[:controller]
+url_options = {:controller => controller, :action => :select}
+-%>
+<ol>
+  <% page.items.each do |record| -%>
+  <li class="<%= cycle '', 'even' %>" id="rs<%= record.id -%>">
+    <% url = url_for(url_options.merge(:id => record.id)) -%>
+    <%= link_to_remote h(record.to_label),
+                        {:url => url,
+                        :method => :post,
+                        :before => 'Element.toggleClassName(this, "selected")',
+                        :condition => "RecordSelect.notify(this)"},
+                        {:href => url} %>
+  </li>
+  <% end -%>
+</ol>

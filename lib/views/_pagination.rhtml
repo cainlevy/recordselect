@@ -1,0 +1,14 @@
+<%
+controller ||= params[:controller]
+url_params = params.merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1)
+prev_url = url_for(url_params.merge(:page => page.prev.number)) if page.prev?
+next_url = url_for(url_params.merge(:page => page.next.number)) if page.next?
+-%>
+<div class="pagination">
+  <%= link_to_remote image_tag('record_select/previous.gif', :alt => 'Previous'),
+                      {:url => prev_url, :method => :get},
+                      {:href => prev_url} if page.prev? %>
+  <%= link_to_remote image_tag('record_select/next.gif', :alt => 'Next'),
+                      {:url => next_url, :method => :get},
+                      {:href => next_url} if page.next? %>
+</div>

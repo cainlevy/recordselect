@@ -7,21 +7,7 @@ module RecordSelect
     # :method => :get
     # params => [:page, :search]
     def browse
-      conditions = []
-      if params[:search]
-        # this logic borrowed from ActiveScaffold
-        tokens = params[:search].split(' ')
-
-        where_clauses = record_select_config.search_on.collect { |sql| "LOWER(#{sql}) LIKE ?" }
-        phrase = "(#{where_clauses.join(' OR ')})"
-
-        sql = ([phrase] * tokens.length).join(' AND ')
-        tokens = tokens.collect{ |value| ["#{value}%"] * record_select_config.search_on.length }.flatten
-
-        conditions = [sql, *tokens]
-      end
-      conditions = merge_conditions(conditions, conditions_for_collection)
-
+      conditions = record_select_conditions
       klass = record_select_config.model
       pager = ::Paginator.new(klass.count(:conditions => conditions), record_select_config.per_page) do |offset, per_page|
         klass.find(:all, :offset => offset, :limit => per_page, :conditions => conditions)
@@ -30,7 +16,13 @@ module RecordSelect
 
       respond_to do |wants|
         wants.html { render_record_select :partial => 'browse', :layout => true }
-        wants.js { render_record_select :partial => 'browse', :layout => false }
+        wants.js {
+          if params[:update]
+            render_record_select :action => 'browse.rjs'
+          else
+            render_record_select :partial => 'browse'
+          end
+        }
         wants.yaml {}
         wants.xml {}
         wants.json {}
@@ -52,8 +44,34 @@ module RecordSelect
 
     protected
 
+    def record_select_conditions
+      conditions = []
+
+      # handle the user's search
+      if params[:search] and !params[:search].empty?
+        # this logic borrowed from ActiveScaffold
+        tokens = params[:search].split(' ')
+
+        where_clauses = record_select_config.search_on.collect { |sql| "LOWER(#{sql}) LIKE ?" }
+        phrase = "(#{where_clauses.join(' OR ')})"
+
+        sql = ([phrase] * tokens.length).join(' AND ')
+        tokens = tokens.collect{ |value| ["#{value}%"] * record_select_config.search_on.length }.flatten
+
+        conditions = [sql, *tokens]
+      end
+
+      # then try and get search terms from the url parameters
+      params.each do |field, value|
+        next unless record_select_config.model.columns_hash.has_key? field
+        conditions = merge_conditions(conditions, ["LOWER(#{field}) LIKE ?", value])
+      end
+
+      merge_conditions(conditions, conditions_for_collection)
+    end
+
     # an override method.
-    # here you can provide custom conditions to define the selectable records.
+    # here you can provide custom conditions to define the selectable records. useful for per-user restrictions.
     # borrowed from ActiveScaffold
     def conditions_for_collection; end
 
@@ -62,10 +80,11 @@ module RecordSelect
     end
 
     def render_record_select(options = {})
-      if action = options.delete(:action)
-        render :template  => record_select_path_of(action), :layout => options[:layout]
-      elsif partial = options.delete(:partial)
-        render :template => record_select_path_of("_#{partial}"), :layout => options[:layout]
+      options[:layout] ||= false
+      if options[:partial]
+        render :partial => record_select_path_of(options[:partial]), :layout => options[:layout], :locals => options[:locals]
+      elsif options[:action]
+        render :template => record_select_path_of(options[:action]), :layout => options[:layout], :locals => options[:locals]
       end
     end
 
@@ -134,24 +153,6 @@ module RecordSelect
       options.each do |k, v|
         instance_variable_set("@#{k}", v) if self.respond_to? k
       end
-    end
-  end
-
-  module ViewHelpers
-    def render_record_select(options = {})
-      render :template  => controller.send(:record_select_path_of, "_#{partial}")
-    end
-
-    def record_select_config
-      controller.send :record_select_config
-    end
-
-    def record_select_includes
-      stylesheet_link_tag 'record_select/record_select'
-    end
-
-    def record_select_id
-      "record-select-#{params[:controller]}"
     end
   end
 end

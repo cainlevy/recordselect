@@ -2,6 +2,7 @@
   width: 400px;
   border: 1px solid #afd0f5;
   font-family: sans-serif;
+  background-color: #fff;
 }
 
 .record-select img {
@@ -34,8 +35,9 @@
   background-color: #ffff88;
 }
 
-.record-select .selected {
-  background-color: #b9dcff
+.record-select ol a.selected {
+  background-color: #666;
+  color: #fff;
 }
 
 .record-select .navigation {
@@ -51,4 +53,15 @@
   float: left;
   font-size: 100%;
   width: 50%;
+}
+
+.record-select-container {
+  position: absolute;
+}
+
+.record-select-input {
+  border-bottom: 1px dashed #666;
+  white-space: nowrap;
+  background-color: #fff;
+  padding: 1px 2px;
 }
