@@ -11,7 +11,10 @@ RecordSelect = {
     else return true;
   },
 
-  embed: function(obj, url, onselect) {
+  open: function(obj, url, onselect) {
+    /* don't re-open */
+    if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) return;
+
     var insertion = new Insertion.After(obj, '<div class="record-select-container record-select-handler"></div>');
     var e = obj.nextSibling;
     e.onselect = onselect;
@@ -31,8 +34,12 @@ RecordSelect = {
     });
   },
 
+  close: function(obj) {
+    Element.remove(obj.nextSibling);
+  },
+
   toggle: function(obj, url, onselect) {
-    if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) Element.remove(obj.nextSibling);
-    else RecordSelect.embed(obj, url, onselect);
+    if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) RecordSelect.close(obj);
+    else RecordSelect.open(obj, url, onselect);
   }
 }

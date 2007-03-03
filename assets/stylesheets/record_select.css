@@ -31,6 +31,18 @@
   background-color: #ffffff;
 }
 
+.record-select ol .pagination a {
+  background-color: #eee;
+}
+
+.record-select ol .previous a {
+  border-bottom: 1px solid #afd0f5;
+}
+
+.record-select ol .next a {
+  border-top: 1px solid #afd0f5;
+}
+
 .record-select ol a:hover {
   background-color: #ffff88;
 }
@@ -40,28 +52,10 @@
   color: #fff;
 }
 
-.record-select .navigation {
-  text-align: right;
-  padding: 2px 4px;
-  font-size: 70%;
-  font-family: serif;
-  overflow: auto;
-  zoom: 1;
-}
-
-.record-select input {
-  float: left;
-  font-size: 100%;
-  width: 50%;
-}
-
 .record-select-container {
   position: absolute;
 }
 
-.record-select-input {
-  border-bottom: 1px dashed #666;
-  white-space: nowrap;
-  background-color: #fff;
-  padding: 1px 2px;
+.record-select-text-field form input {
+  display: none;
 }

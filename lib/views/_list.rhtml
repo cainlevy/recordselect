@@ -1,17 +1,35 @@
 <%
 controller ||= params[:controller]
-url_options = {:controller => controller, :action => :select}
+url_params = {:controller => controller, :action => :select}
+
+pagination_url_params = params.merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1)
+prev_url = url_for(pagination_url_params.merge(:page => page.prev.number)) if page.prev?
+next_url = url_for(pagination_url_params.merge(:page => page.next.number)) if page.next?
 -%>
 <ol>
+  <% if page.prev? -%>
+  <li class="pagination previous">
+    <%= link_to_remote image_tag('record_select/previous.gif', :alt => 'Previous') + " Previous #{record_select_config.per_page}",
+                      {:url => prev_url, :method => :get},
+                      {:href => prev_url} %>
+  </li>
+  <% end -%>
   <% page.items.each do |record| -%>
-  <li class="<%= cycle '', 'even' %>" id="rs<%= record.id -%>">
-    <% url = url_for(url_options.merge(:id => record.id)) -%>
+  <li class="<%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
+    <% url = url_for(url_params.merge(:id => record.id)) -%>
     <%= link_to_remote h(record.to_label),
                         {:url => url,
                         :method => :post,
                         :before => 'Element.toggleClassName(this, "selected")',
                         :condition => "RecordSelect.notify(this)"},
                         {:href => url} %>
+  </li>
+  <% end -%>
+  <% if page.next? -%>
+  <li class="pagination next">
+    <%= link_to_remote "Next #{record_select_config.per_page} " + image_tag('record_select/next.gif', :alt => 'Next'),
+                        {:url => next_url, :method => :get},
+                        {:href => next_url} %>
   </li>
   <% end -%>
 </ol>

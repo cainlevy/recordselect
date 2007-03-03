@@ -32,16 +32,20 @@ module ActionView # :nodoc:
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:id] ||= name.gsub(/[\[\]]/, '_')
 
-        label = (!current or current.new_record?) ? 'None Selected' : current.to_label
+        label = (!current or current.new_record?) ? '' : current.to_label
+
+        text_field = %(<input autocomplete="off" type="text" value="#{h label}" class="record-select-input" onfocus="RecordSelect.open(this)" onblur="RecordSelect.close(this)" onkeyup="$$('##{record_select_id(options[:controller])}-search input')[0].value = this.value" />)
 
         html = ''
-        html << %(<input type="hidden" name="#{h name}" value="#{current.id}" id="#{options[:id]}" />)
-        html << link_to_record_select(
-          "<span class='record-select-input'>#{h label}</span>",
-          options[:controller],
-          :onselect => "$('#{options[:id]}').value = id; Element.previous(container).childNodes[0].innerHTML = label; Element.remove(container);",
-          :params => options[:params]
-        )
+        html << '<span class="record-select-text-field">';
+          html << %(<input type="hidden" name="#{h name}" value="#{current.id}" id="#{options[:id]}" />)
+          html << link_to_record_select(
+            text_field,
+            options[:controller],
+            :onselect => "$('#{options[:id]}').value = id; Element.previous(container).childNodes[0].value = label; Element.remove(container);",
+            :params => options[:params]
+          )
+        html << '</span>'
 
         return html
       end

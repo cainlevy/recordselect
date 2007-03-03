@@ -3,9 +3,6 @@ controller ||= params[:controller]
 record_select_id = record_select_id(controller)
 -%>
 <div class="record-select" id="<%= record_select_id -%>">
-  <div class="navigation">
-    <%= render_record_select :partial => 'search', :locals => {:controller => controller, :record_select_id => record_select_id} %>
-    <%= render_record_select :partial => 'pagination', :locals => {:controller => controller, :page => @page, :record_select_id => record_select_id} %>
-  </div>
+  <%= render_record_select :partial => 'search', :locals => {:controller => controller, :record_select_id => record_select_id} %>
   <%= render_record_select :partial => 'list', :locals => {:controller => controller, :page => @page, :record_select_id => record_select_id} %>
 </div>
