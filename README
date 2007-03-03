@@ -21,6 +21,14 @@ To use RecordSelect RESTfully, add the following to your routes.rb:
 
    <tt><%= record_select_includes %></tt>
 
+3. Enable and configure it on a controller.
+
+   <tt>
+   class UsersController < ApplicationController
+     record_select :per_page => 5, :search_on => 'username'
+   end
+   </tt>
+
 = EXAMPLES
 * <tt><%= link_to_record_select 'Try Me!', 'users', :onselect => 'alert("#" + id + ": " + label)' %></tt>
 
@@ -28,10 +36,9 @@ To use RecordSelect RESTfully, add the following to your routes.rb:
 
 * <tt><%= record_select_field 'user[user_group]', (@user.user_group || UserGroup.new) %></tt>
 
-  Creates a dropdown of user groups on your user form.
+  Creates a searchable dropdown of user groups on your user form.
 
 = COMING SOON
-* Improved record_select_field UI. Instead of a <span> to hold the label, it will have a text field that acts as the search box. Behind the scenes it will still use a hidden input.
 * Better support for multi-select.
 * Automated tests. Maybe. Talk about a huge blind spot in my knowledge base...
 

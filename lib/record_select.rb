@@ -119,14 +119,14 @@ module RecordSelect
   end
 
   module ClassMethods
-    # sets up RecordSelect on your controller.
+    # Enables and configures RecordSelect on your controller.
     #
-    # options:
-    #   :model - defaults based on the name of the controller
-    #   :per_page - records to show per page when browsing
-    #   :notify - a method name to invoke when a record has been selected.
+    # *Options:*
+    # +:model+::    defaults based on the name of the controller
+    # +:per_page+:: records to show per page when browsing
+    # +:notify+::   a method name to invoke when a record has been selected.
     #
-    # you may also pass a block, which will be used as options[:notify].
+    # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})
       options[:model] ||= self.to_s.sub(/Controller$/, '').underscore.pluralize.singularize
       options[:per_page] ||= 10
