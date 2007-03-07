@@ -3,8 +3,8 @@ controller ||= params[:controller]
 url_params = {:controller => controller, :action => :select}
 
 pagination_url_params = params.merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1)
-prev_url = url_for(pagination_url_params.merge(:page => page.prev.number)) if page.prev?
-next_url = url_for(pagination_url_params.merge(:page => page.next.number)) if page.next?
+prev_url = url_for(pagination_url_params.merge(:page => page.prev.number, :escape => false)) if page.prev?
+next_url = url_for(pagination_url_params.merge(:page => page.next.number, :escape => false)) if page.next?
 -%>
 <ol>
   <% if page.prev? -%>
@@ -16,7 +16,7 @@ next_url = url_for(pagination_url_params.merge(:page => page.next.number)) if pa
   <% end -%>
   <% page.items.each do |record| -%>
   <li class="<%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
-    <% url = url_for(url_params.merge(:id => record.id)) -%>
+    <% url = url_for(url_params.merge(:id => record.id, :escape => false)) -%>
     <%= link_to_remote h(record.to_label),
                         {:url => url,
                         :method => :post,

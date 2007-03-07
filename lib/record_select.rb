@@ -49,7 +49,6 @@ module RecordSelect
 
       # handle the user's search
       if params[:search] and !params[:search].empty?
-        # this logic borrowed from ActiveScaffold
         tokens = params[:search].split(' ')
 
         where_clauses = record_select_config.search_on.collect { |sql| "LOWER(#{sql}) LIKE ?" }
@@ -72,7 +71,6 @@ module RecordSelect
 
     # an override method.
     # here you can provide custom conditions to define the selectable records. useful for per-user restrictions.
-    # borrowed from ActiveScaffold
     def conditions_for_collection; end
 
     def record_select_config
@@ -88,7 +86,6 @@ module RecordSelect
       end
     end
 
-    # borrowed from ActiveScaffold
     unless method_defined? :merge_conditions
     def merge_conditions(*conditions)
       sql, values = [], []
@@ -129,30 +126,14 @@ module RecordSelect
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})
       options[:model] ||= self.to_s.sub(/Controller$/, '').underscore.pluralize.singularize
-      options[:per_page] ||= 10
-      options[:notify] = proc if block_given?
-      options[:search_on] = [options[:search_on]] unless options[:search_id].is_a? Array
-
-      @record_select_config = RecordSelect::Config.new(
-        :model => options[:model].camelcase.constantize,
-        :per_page => options[:per_page],
-        :notify => options[:notify],
-        :search_on => options[:search_on]
-      )
+      @record_select_config = RecordSelect::Config.new(options.delete(:model), options)
       self.send :include, RecordSelect::Actions
     end
 
     attr_reader :record_select_config
-  end
 
-  # a write-once configuration object
-  class Config
-    attr_reader :model, :per_page, :notify, :search_on
-
-    def initialize(options = {})
-      options.each do |k, v|
-        instance_variable_set("@#{k}", v) if self.respond_to? k
-      end
+    def uses_record_select?
+      !record_select_config.nil?
     end
   end
 end

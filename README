@@ -23,11 +23,9 @@ To use RecordSelect RESTfully, add the following to your routes.rb:
 
 3. Enable and configure it on a controller.
 
-   <tt>
-   class UsersController < ApplicationController
+   <tt>class UsersController < ApplicationController
      record_select :per_page => 5, :search_on => 'username'
-   end
-   </tt>
+   end</tt>
 
 = EXAMPLES
 * <tt><%= link_to_record_select 'Try Me!', 'users', :onselect => 'alert("#" + id + ": " + label)' %></tt>
@@ -39,7 +37,8 @@ To use RecordSelect RESTfully, add the following to your routes.rb:
   Creates a searchable dropdown of user groups on your user form.
 
 = COMING SOON
-* Better support for multi-select.
+* Keyboard navigation (up/down/enter)
+* Support for multi-select: better interface, standard view helpers.
 * Automated tests. Maybe. Talk about a huge blind spot in my knowledge base...
 
 = DEPENDENCIES

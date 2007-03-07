@@ -1,6 +1,7 @@
 require 'record_select'
 require 'helpers'
 require 'active_record'
+require 'config'
 
 ActionController::Base.send(:include, RecordSelect)
 ActionView::Base.send(:include, ActionView::Helpers::RecordSelectHelpers)
