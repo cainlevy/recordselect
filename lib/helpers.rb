@@ -19,8 +19,10 @@ module ActionView # :nodoc:
         options[:params] ||= {}
         options[:params].merge!(:controller => controller, :action => :browse)
         options[:onselect] = "function(id, label, container) {#{options[:onselect]}}" if options[:onselect]
+        options[:html] ||= {}
+        options[:html][:container_id] = record_select_container_id(controller)
 
-        link_to_function(name, %|RecordSelect.toggle(this, '#{url_for options[:params]}', #{h options[:onselect]})|)
+        link_to_function(name, %|RecordSelect.toggle(this, '#{url_for options[:params]}', #{h options[:onselect]})|, options[:html])
       end
 
       # Adds a RecordSelect-based form field. The field submits the record's id using a hidden input.
@@ -34,7 +36,7 @@ module ActionView # :nodoc:
 
         label = (!current or current.new_record?) ? '' : current.to_label
 
-        text_field = %(<input autocomplete="off" type="text" value="#{h label}" class="record-select-input" onfocus="RecordSelect.open(this)" onblur="RecordSelect.close(this)" onkeyup="$$('##{record_select_id(options[:controller])}-search input')[0].value = this.value" />)
+        text_field = %(<input autocomplete="off" type="text" value="#{h label}" container_id="#{record_select_container_id(options[:controller])}" onkeyup="RecordSelect.open(this); $$('##{record_select_search_id(options[:controller])} input')[0].value = this.value" />)
 
         html = ''
         html << '<span class="record-select-text-field">';
@@ -42,8 +44,9 @@ module ActionView # :nodoc:
           html << link_to_record_select(
             text_field,
             options[:controller],
-            :onselect => "$('#{options[:id]}').value = id; Element.previous(container).childNodes[0].value = label; Element.remove(container);",
-            :params => options[:params]
+            :onselect => "$('#{options[:id]}').value = id; Element.next($('#{options[:id]}')).childNodes[0].value = label; Element.remove(container);",
+            :params => options[:params],
+            :html => {:class => 'record-select-autocomplete'}
           )
         html << '</span>'
 
@@ -66,6 +69,14 @@ module ActionView # :nodoc:
       def record_select_id(controller = nil)
         controller ||= params[:controller]
         "record-select-#{controller}"
+      end
+
+      def record_select_search_id(controller = nil)
+        "#{record_select_id(controller)}-search"
+      end
+
+      def record_select_container_id(controller = nil)
+        "#{record_select_id(controller)}-container"
       end
     end
   end

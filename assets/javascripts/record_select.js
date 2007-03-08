@@ -5,7 +5,11 @@ RecordSelect = {
     if (typeof onselect != 'function') onselect = eval(onselect);
     if (onselect)
     {
-      onselect(item.parentNode.id.substr(2), item.innerHTML, e);
+      try {
+        onselect(item.parentNode.id.substr(2), item.innerHTML, e);
+      } catch(e) {
+        alert(e);
+      }
       return false;
     }
     else return true;
@@ -15,8 +19,16 @@ RecordSelect = {
     /* don't re-open */
     if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) return;
 
-    var insertion = new Insertion.After(obj, '<div class="record-select-container record-select-handler"></div>');
-    var e = obj.nextSibling;
+    var id = obj.getAttribute('container_id');
+    var insertion = new Insertion.Bottom(document.body, '<div class="record-select-container record-select-handler" id="' + id + '"></div>');
+    var e = $(id);
+
+    if (Element.hasClassName(obj, 'record-select-autocomplete')) Element.addClassName(e, 'record-select-autocomplete');
+
+    var offset = Position.cumulativeOffset(obj);
+    e.style.left = offset[0] + 'px';
+    e.style.top = (Element.getHeight(obj) + offset[1]) + 'px';
+
     e.onselect = onselect;
 
     new Ajax.Updater(e, url, {
@@ -35,7 +47,7 @@ RecordSelect = {
   },
 
   close: function(obj) {
-    Element.remove(obj.nextSibling);
+    Element.remove($(obj.getAttribute('container_id')));
   },
 
   toggle: function(obj, url, onselect) {

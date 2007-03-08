@@ -56,6 +56,6 @@
   position: absolute;
 }
 
-.record-select-text-field form input {
+.record-select-autocomplete form input {
   display: none;
 }

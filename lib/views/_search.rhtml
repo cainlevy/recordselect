@@ -1,12 +1,12 @@
-<% search_url = url_for(params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1)) -%>
+<% search_url = url_for(params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1, :escape => false)) -%>
 <%= form_remote_tag :url => search_url, :method => :post,
-                    :html => { :action => search_url, :id => "#{record_select_id}-search" }%>
+                    :html => { :action => search_url, :id => record_select_search_id }%>
   <%= text_field_tag 'search', params[:search], :autocomplete => 'off' %>
 <%= end_form_tag %>
 
 <script type="text/javascript">
 //<![CDATA[
-  new Form.Element.Observer($$('#<%= record_select_id -%>-search input').first(), 1.0, function(element, value) {
+  new Form.Element.Observer($$('#<%= record_select_search_id -%> input').first(), 1.0, function(element, value) {
     element.parentNode.onsubmit();
     return false;
   });
