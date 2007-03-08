@@ -107,7 +107,7 @@ module RecordSelect
     private
 
     def record_select_views_path
-      @record_select_views_path ||= "../../vendor/plugins/recordselect/lib/views"
+      @record_select_views_path ||= "../../vendor/plugins/#{File.expand_path(__FILE__).match(/vendor\/plugins\/(\w*)/)[1]}/lib/views"
     end
 
     def record_select_path_of(template)
