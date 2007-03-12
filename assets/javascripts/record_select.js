@@ -36,9 +36,9 @@ RecordSelect = {
       asynchronous: true,
       insertion: Insertion.Bottom,
       onSuccess: function() {
-        Element.observe(window, 'click', function(ev) {
+        Element.observe(document.body, 'click', function(ev) {
           if (!e || !e.parentNode) return;
-          if (Event.element(ev).ancestors().include(e)) return;
+          if (Element.ancestors(Event.element(ev)).include(e)) return;
           Element.remove(e);
           delete e;
         });
