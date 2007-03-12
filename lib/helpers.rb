@@ -29,6 +29,7 @@ module ActionView # :nodoc:
       #
       # *Options*
       # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
+      # +params+::      A hash of URL parameters
       # +id+::          The id to use for the hidden input. Defaults based on the input's name.
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore

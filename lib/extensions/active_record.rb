@@ -4,5 +4,6 @@ module ActiveRecord # :nodoc:
     def to_label
       self.to_s
     end
+    end
   end
 end

@@ -17,7 +17,7 @@ RecordSelect = {
 
   open: function(obj, url, onselect) {
     /* don't re-open */
-    if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) return;
+    if (Element.next(obj) && Element.hasClassName(Element.next(obj), 'record-select-container')) return;
 
     var id = obj.getAttribute('container_id');
     var insertion = new Insertion.Bottom(document.body, '<div class="record-select-container record-select-handler" id="' + id + '"></div>');
@@ -51,7 +51,7 @@ RecordSelect = {
   },
 
   toggle: function(obj, url, onselect) {
-    if (obj.next() && Element.hasClassName(obj.next(), 'record-select-container')) RecordSelect.close(obj);
+    if (Element.next(obj) && Element.hasClassName(Element.next(obj), 'record-select-container')) RecordSelect.close(obj);
     else RecordSelect.open(obj, url, onselect);
   }
 }

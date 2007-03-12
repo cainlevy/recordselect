@@ -14,7 +14,7 @@ module RecordSelect
 
     # The model object we're browsing
     def model
-      @model ||= klass.camelcase.constantize
+      @model ||= klass.to_s.camelcase.constantize
     end
 
     # Records to show on a page
