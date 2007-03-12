@@ -1,6 +1,6 @@
 RecordSelect = {
   notify: function (item) {
-    var e = item.up('.record-select-handler');
+    var e = Element.up(item, '.record-select-handler');
     var onselect = e.onselect || e.getAttribute('onselect');
     if (typeof onselect != 'function') onselect = eval(onselect);
     if (onselect)
