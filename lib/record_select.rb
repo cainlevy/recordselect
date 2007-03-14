@@ -10,7 +10,10 @@ module RecordSelect
       conditions = record_select_conditions
       klass = record_select_config.model
       pager = ::Paginator.new(klass.count(:conditions => conditions), record_select_config.per_page) do |offset, per_page|
-        klass.find(:all, :offset => offset, :limit => per_page, :conditions => conditions)
+        klass.find(:all, :offset => offset,
+                         :limit => per_page,
+                         :conditions => conditions,
+                         :order => record_select_config.order_by)
       end
       @page = pager.page(params[:page] || 1)
 
@@ -119,9 +122,11 @@ module RecordSelect
     # Enables and configures RecordSelect on your controller.
     #
     # *Options*
-    # +model+::    defaults based on the name of the controller
-    # +per_page+:: records to show per page when browsing
-    # +notify+::   a method name to invoke when a record has been selected.
+    # +model+::     defaults based on the name of the controller
+    # +per_page+::  records to show per page when browsing
+    # +notify+::    a method name to invoke when a record has been selected.
+    # +order_by+::  a SQL string to order the search results
+    # +search_on+:: an array of searchable fields
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})

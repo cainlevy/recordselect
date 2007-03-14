@@ -10,6 +10,8 @@ module RecordSelect
 
       options[:search_on] = [options[:search_on]] if options[:search_on] and not options[:search_id].is_a? Array
       @search_on = options[:search_on]
+
+      @order_by = options[:order_by]
     end
 
     # The model object we're browsing
@@ -31,6 +33,10 @@ module RecordSelect
     # A collection of fields to search. This is essentially raw SQL, so you could search on "CONCAT(first_name, ' ', last_name)" if you wanted to.
     def search_on
       @search_on ||= self.model.columns.collect{|c| c.name if [:text, :string].include? c.type}.compact
+    end
+
+    def order_by
+      @order_by ||= 'id ASC'
     end
 
     protected
