@@ -36,7 +36,7 @@ module RecordSelect
     end
 
     def order_by
-      @order_by ||= 'id ASC'
+      @order_by ||= "#{model.primary_key} ASC"
     end
 
     protected
