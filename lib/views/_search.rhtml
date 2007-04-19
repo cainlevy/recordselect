@@ -1,8 +1,8 @@
 <% search_url = url_for(params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1, :escape => false)) -%>
-<%= form_remote_tag :url => search_url, :method => :post,
-                    :html => { :action => search_url, :id => record_select_search_id }%>
+<% form_remote_tag :url => search_url, :method => :post,
+                    :html => { :action => search_url, :id => record_select_search_id } do %>
   <%= text_field_tag 'search', params[:search], :autocomplete => 'off' %>
-<%= end_form_tag %>
+<% end %>
 
 <script type="text/javascript">
 //<![CDATA[

@@ -30,26 +30,21 @@ module ActionView # :nodoc:
       # *Options*
       # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
       # +params+::      A hash of URL parameters
-      # +id+::          The id to use for the hidden input. Defaults based on the input's name.
+      # +id+::          The id to use for the input. Defaults based on the input's name.
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore
+        options[:params] ||= {}
         options[:id] ||= name.gsub(/[\[\]]/, '_')
 
-        label = (!current or current.new_record?) ? '' : current.to_label
+        id = label = ''
+        if current and not current.new_record?
+          id = current.id
+          label = current.to_label
+        end
 
-        text_field = %(<input autocomplete="off" type="text" value="#{h label}" container_id="#{record_select_container_id(options[:controller])}" onkeyup="RecordSelect.open(this); $$('##{record_select_search_id(options[:controller])} input')[0].value = this.value" />)
-
-        html = ''
-        html << '<span class="record-select-text-field">';
-          html << %(<input type="hidden" name="#{h name}" value="#{current.id}" id="#{options[:id]}" />)
-          html << link_to_record_select(
-            text_field,
-            options[:controller],
-            :onselect => "$('#{options[:id]}').value = id; Element.next($('#{options[:id]}')).childNodes[0].value = label; Element.remove(container);",
-            :params => options[:params],
-            :html => {:class => 'record-select-autocomplete'}
-          )
-        html << '</span>'
+        url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
+        html = text_field_tag(name, nil, :autocomplete => 'off')
+        html << javascript_tag("new RecordSelect.Autocomplete(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
 
         return html
       end

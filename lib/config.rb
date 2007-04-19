@@ -8,7 +8,7 @@ module RecordSelect
 
       @per_page = options[:per_page]
 
-      options[:search_on] = [options[:search_on]] if options[:search_on] and not options[:search_id].is_a? Array
+      options[:search_on] = [options[:search_on]] if options[:search_on] and not options[:search_on].is_a? Array
       @search_on = options[:search_on]
 
       @order_by = options[:order_by]
