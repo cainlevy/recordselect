@@ -10,6 +10,10 @@
   border-width: 0px;
 }
 
+.record-select form {
+  display: inline;
+}
+
 .record-select ol,
 .record-select li {
   margin: 0px;
