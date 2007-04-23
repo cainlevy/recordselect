@@ -1,4 +1,7 @@
+Event.observe(window, 'load', function() {RecordSelect.document_loaded = true});
+
 var RecordSelect = new Object();
+RecordSelect.document_loaded = false;
 
 RecordSelect.notify = function(item) {
   var e = Element.up(item, '.record-select-handler');
@@ -29,7 +32,8 @@ Object.extend(RecordSelect.Abstract.prototype, {
     this.options = options;
     this.container;
 
-    Event.observe(window, 'load', this.onload.bind(this));
+    if (RecordSelect.document_loaded) this.onload();
+    else Event.observe(window, 'load', this.onload.bind(this));
   },
 
   /**
