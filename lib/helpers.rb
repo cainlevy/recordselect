@@ -47,7 +47,7 @@ module ActionView # :nodoc:
 
         url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
 
-        html = text_field_tag(name, nil, :autocomplete => 'off')
+        html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id])
         html << javascript_tag("new RecordSelect.Autocomplete(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
 
         return html
