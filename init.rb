@@ -1,4 +1,5 @@
 require 'record_select'
+require 'conditions'
 require 'helpers'
 require 'config'
 require 'extensions/active_record'

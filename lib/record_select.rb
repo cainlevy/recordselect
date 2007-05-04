@@ -47,35 +47,6 @@ module RecordSelect
 
     protected
 
-    def record_select_conditions
-      conditions = []
-
-      # handle the user's search
-      if params[:search] and !params[:search].empty?
-        tokens = params[:search].split(' ')
-
-        where_clauses = record_select_config.search_on.collect { |sql| "LOWER(#{sql}) LIKE ?" }
-        phrase = "(#{where_clauses.join(' OR ')})"
-
-        sql = ([phrase] * tokens.length).join(' AND ')
-        tokens = tokens.collect{ |value| ["#{value}%"] * record_select_config.search_on.length }.flatten
-
-        conditions = [sql, *tokens]
-      end
-
-      # then try and get search terms from the url parameters
-      params.each do |field, value|
-        next unless record_select_config.model.columns_hash.has_key? field
-        conditions = merge_conditions(conditions, ["LOWER(#{field}) LIKE ?", value])
-      end
-
-      merge_conditions(conditions, conditions_for_collection)
-    end
-
-    # an override method.
-    # here you can provide custom conditions to define the selectable records. useful for per-user restrictions.
-    def conditions_for_collection; end
-
     def record_select_config
       self.class.record_select_config
     end
@@ -87,24 +58,6 @@ module RecordSelect
       elsif options[:action]
         render :template => record_select_path_of(options[:action]), :layout => options[:layout], :locals => options[:locals]
       end
-    end
-
-    unless method_defined? :merge_conditions
-    def merge_conditions(*conditions)
-      sql, values = [], []
-      conditions.compact.each do |condition|
-        next if condition.empty? # .compact removes nils but it doesn't remove empty arrays.
-        condition = condition.clone
-        # "name = 'Joe'" gets parsed to sql => "name = 'Joe'", values => []
-        # ["name = '?'", 'Joe'] gets parsed to sql => "name = '?'", values => ['Joe']
-        sql << ((condition.is_a? String) ? condition : condition.shift)
-        values += (condition.is_a? String) ? [] : condition
-      end
-      # if there are no values, then simply return the joined sql. otherwise, stick the joined sql onto the beginning of the values array and return that.
-      conditions = values.empty? ? sql.join(" AND ") : values.unshift(sql.join(" AND "))
-      conditions = nil if conditions.empty?
-      conditions
-    end
     end
 
     private
@@ -133,6 +86,7 @@ module RecordSelect
       options[:model] ||= self.to_s.sub(/Controller$/, '').underscore.pluralize.singularize
       @record_select_config = RecordSelect::Config.new(options.delete(:model), options)
       self.send :include, RecordSelect::Actions
+      self.send :include, RecordSelect::Conditions
     end
 
     attr_reader :record_select_config
