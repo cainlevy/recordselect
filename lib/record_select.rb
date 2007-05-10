@@ -84,7 +84,7 @@ module RecordSelect
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})
-      options[:model] ||= self.to_s.sub(/Controller$/, '').underscore.pluralize.singularize
+      options[:model] ||= self.to_s.split('::').last.sub(/Controller$/, '').pluralize.singularize.underscore
       @record_select_config = RecordSelect::Config.new(options.delete(:model), options)
       self.send :include, RecordSelect::Actions
       self.send :include, RecordSelect::Conditions
