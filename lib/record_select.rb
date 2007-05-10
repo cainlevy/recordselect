@@ -80,6 +80,7 @@ module RecordSelect
     # +notify+::    a method name to invoke when a record has been selected.
     # +order_by+::  a SQL string to order the search results
     # +search_on+:: an array of searchable fields
+    # +full_text_search+::  a boolean for whether to use a %?% search pattern or not. default is false.
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})

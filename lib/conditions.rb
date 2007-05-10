@@ -18,6 +18,8 @@ module RecordSelect
     # generate conditions from params[:search]
     # override this if you want to customize the search routine
     def record_select_conditions_from_search
+      search_pattern = record_select_config.full_text_search? ? '%?%' : '?%'
+
       if params[:search] and !params[:search].empty?
         tokens = params[:search].split(' ')
 
@@ -25,7 +27,7 @@ module RecordSelect
         phrase = "(#{where_clauses.join(' OR ')})"
 
         sql = ([phrase] * tokens.length).join(' AND ')
-        tokens = tokens.collect{ |value| ["#{value}%"] * record_select_config.search_on.length }.flatten
+        tokens = tokens.collect{ |value| [search_pattern.sub('?', value.downcase)] * record_select_config.search_on.length }.flatten
 
         conditions = [sql, *tokens]
       end

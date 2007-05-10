@@ -12,6 +12,8 @@ module RecordSelect
       @search_on = options[:search_on]
 
       @order_by = options[:order_by]
+
+      @full_text_search = options[:full_text_search]
     end
 
     # The model object we're browsing
@@ -37,6 +39,10 @@ module RecordSelect
 
     def order_by
       @order_by ||= "#{model.primary_key} ASC"
+    end
+
+    def full_text_search?
+      @full_text_search ? true : false
     end
 
     protected
