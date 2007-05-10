@@ -73,6 +73,7 @@
   border-bottom: 1px solid #afd0f5;
 }
 
+.record-select ol .current a,
 .record-select ol a:hover {
   background-color: #ffff88;
 }

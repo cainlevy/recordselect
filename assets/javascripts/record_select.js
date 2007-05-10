@@ -120,6 +120,56 @@ Object.extend(RecordSelect.Abstract.prototype, {
 });
 
 /**
+ * Adds keyboard navigation to RecordSelect objects
+ */
+Object.extend(RecordSelect.Abstract.prototype, {
+  current: null,
+
+  /**
+   * keyboard navigation - where to intercept the keys is up to the concrete class
+   */
+  onkeypress: function(ev) {
+    var elem;
+    switch (ev.keyCode) {
+      case Event.KEY_UP:
+        if (this.current && this.current.up('.record-select')) elem = this.current.previous();
+        if (!elem) elem = this.container.getElementsBySelector('ol li.record').last();
+        this.highlight(elem);
+        break;
+      case Event.KEY_DOWN:
+        if (this.current && this.current.up('.record-select')) elem = this.current.next();
+        if (!elem) elem = this.container.getElementsBySelector('ol li.record').first();
+        this.highlight(elem);
+        break;
+      case Event.KEY_SPACE:
+      case Event.KEY_RETURN:
+        if (this.current) this.current.down('a').onclick();
+        break;
+      case Event.KEY_RIGHT:
+        elem = this.container.down('li.pagination.next');
+        if (elem) elem.down('a').onclick();
+        break;
+      case Event.KEY_LEFT:
+        elem = this.container.down('li.pagination.previous');
+        if (elem) elem.down('a').onclick();
+        break;
+      case Event.KEY_ESC:
+        this.close();
+        break;
+    }
+  },
+
+  /**
+   * moves the highlight to a new object
+   */
+  highlight: function(obj) {
+    if (this.current) this.current.removeClassName('current');
+    this.current = $(obj);
+    obj.addClassName('current');
+  }
+});
+
+/**
  * Used by link_to_record_select
  * The options hash should contain a onselect: key, with a javascript function as value
  */
@@ -128,6 +178,8 @@ RecordSelect.Dialog.prototype = Object.extend(new RecordSelect.Abstract(), {
   onload: function() {
     this.container = this.create_container();
     this.obj.observe('click', this.toggle.bind(this));
+
+    if (this.onkeypress) this.obj.observe('keyup', this.onkeypress.bind(this));
   },
 
   onselect: function(id, value) {
@@ -168,8 +220,10 @@ RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(),
     // the autosearch event
     this.obj.observe('keyup', function() {
       if (!this.is_open()) return;
-      this.container.down('input[name=search]').value = this.obj.value;
+      this.container.down('.text-input').value = this.obj.value;
     }.bind(this));
+
+    if (this.onkeypress) this.obj.observe('keyup', this.onkeypress.bind(this));
   },
 
   onselect: function(id, value) {

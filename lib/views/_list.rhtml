@@ -16,7 +16,7 @@ next_url = url_for(pagination_url_params.merge(:page => page.next.number, :escap
   </li>
   <% end -%>
   <% page.items.each do |record| -%>
-  <li class="<%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
+  <li class="record <%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
     <% url = url_for(url_params.merge(:id => record.id, :escape => false)) -%>
     <%= link_to_remote h(record.to_label),
                         {:url => url,

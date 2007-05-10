@@ -7,7 +7,7 @@
 <script type="text/javascript">
 //<![CDATA[
   var i = $$('#<%= record_select_search_id %> input').first();
-  new TextFieldWithExample(i, '--- search ---');
+  //new TextFieldWithExample(i, '--- search ---');
   new Form.Element.Observer(i, 1.0, function(element, value) {
     element.parentNode.onsubmit();
     return false;
