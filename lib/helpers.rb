@@ -67,7 +67,7 @@ module ActionView # :nodoc:
 
       # The id of the RecordSelect widget for the given controller.
       def record_select_id(controller = nil)
-        controller ||= params[:controller]
+        controller ||= params[:controller].gsub(/\//, '_')
         "record-select-#{controller}"
       end
 
