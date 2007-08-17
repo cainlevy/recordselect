@@ -160,6 +160,19 @@ Object.extend(RecordSelect.Abstract.prototype, {
   },
 
   /**
+   * In order for the keyboard navigation to completely work when RecordSelect is
+   * inside a form, we need to stop 'enter' from submitting the form when the focus
+   * is on the RecordSelect dialog.
+   *
+   * This method should observe the form's submit event.
+   */
+  disable_enter_form_submits: function(ev) {
+    if (this.is_open() && this.obj == Event.element(ev)) {
+      Event.stop(ev);
+    }
+  },
+
+  /**
    * moves the highlight to a new object
    */
   highlight: function(obj) {
@@ -223,7 +236,10 @@ RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(),
       this.container.down('.text-input').value = this.obj.value;
     }.bind(this));
 
-    if (this.onkeypress) this.obj.observe('keyup', this.onkeypress.bind(this));
+    if (this.onkeypress) {
+      this.obj.observe('keyup', this.onkeypress.bind(this));
+      this.obj.up('form').observe('submit', this.disable_enter_form_submits.bind(this));
+    }
   },
 
   onselect: function(id, value) {
