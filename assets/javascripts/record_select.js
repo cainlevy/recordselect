@@ -242,6 +242,14 @@ RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(),
     }
   },
 
+  
+  close: function() {
+    // if they close the dialog with the text field empty, then delete the id value
+    if (this.obj.value == '') this.set('', '');
+
+    RecordSelect.Abstract.prototype.close.call(this);
+  },
+
   onselect: function(id, value) {
     this.set(id, value);
     this.close();
