@@ -22,6 +22,8 @@ module ActionView # :nodoc:
         options[:html] ||= {}
         options[:html][:id] ||= "rs_#{rand(9999)}"
 
+        assert_controller_responds(options[:params][:controller])
+
         html = link_to_function(name, '', options[:html])
         html << javascript_tag("new RecordSelect.Dialog(#{options[:html][:id].to_json}, #{url_for(options[:params]).to_json}, {onselect: #{options[:onselect]}})")
 
@@ -38,6 +40,8 @@ module ActionView # :nodoc:
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:params] ||= {}
         options[:id] ||= name.gsub(/[\[\]]/, '_')
+
+        assert_controller_responds(options[:controller])
 
         id = label = ''
         if current and not current.new_record?
@@ -73,6 +77,17 @@ module ActionView # :nodoc:
 
       def record_select_search_id(controller = nil)
         "#{record_select_id(controller)}-search"
+      end
+
+      private
+
+      def assert_controller_responds(controller_name)
+        path = params[:controller].split('/')
+        path[path.length - 1] = controller_name
+        controller_name = "#{path.join('/').camelize}Controller"        
+        unless controller_name.constantize.uses_record_select?
+          raise "#{controller_name} has not been configured to use RecordSelect."
+        end
       end
     end
   end
