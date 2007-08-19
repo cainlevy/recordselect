@@ -35,10 +35,11 @@ module ActionView # :nodoc:
       # *Arguments*
       # +name+:: the input name that will be used to submit the selected record's id.
       # +current+:: the currently selected object. provide a new record if there're none currently selected and you have not passed the optional :controller argument.
-      # +options+::
-      # * +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
-      # * +params+::      A hash of URL parameters
-      # * +id+::          The id to use for the input. Defaults based on the input's name.
+      #
+      # *Options*
+      # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
+      # +params+::      A hash of URL parameters
+      # +id+::          The id to use for the input. Defaults based on the input's name.
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:params] ||= {}
@@ -65,10 +66,11 @@ module ActionView # :nodoc:
       # *Arguments*
       # +name+:: the input name that will be used to submit the selected records' ids. empty brackets will be appended to the name.
       # +current+:: pass the current values in Rails' standard [[id, label], [id, label]] format.
-      # +options+::
-      # * +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
-      # * +params+::      A hash of URL parameters
-      # * +id+::          The id to use for the input. Defaults based on the input's name.
+      #
+      # *Options*
+      # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
+      # +params+::      A hash of URL parameters
+      # +id+::          The id to use for the input. Defaults based on the input's name.
       def record_multi_select_field(name, current, options = {})
         options[:controller] ||= current.first.class.to_s.pluralize.underscore
         options[:params] ||= {}

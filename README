@@ -3,43 +3,9 @@ RecordSelect
 
 (c) 2007 - Lance Ivy
 
-This plugin is a streamlined listing tool with a dedicated purpose: to let you select a record from a possibly large record set in a friendly fashion. It will report the selected record(s) to a given method on the controller or to a JavaScript function on the client.
+RecordSelect is a Rails widget to help you pick one record out of many. I designed it as a more usable and performant alternative to generating a massive dropdown list. It relies on AJAX for the cooler uses (all the provided view helpers rely on JavaScript?) but can also function in a pure-http fashion (although multi-select support is provided in a pure-JavaScript implementation).
 
-Included is a +link_to_record_select+ helper to assist with embedding a RecordSelect popup in your page. Also included is a +record_select_field+ helper. This helper ties RecordSelect into your form by making it set a hidden input field. Think of it as a paginated and searchable autocomplete dropdown. Or think of it as a <select> replacement that won't bog down with large recordsets.
-
-To use RecordSelect RESTfully, add the following to your routes.rb:
-
-  map.resources :model_id, :collection => {:browse => :get},
-                           :member => {:select => :post}
-
-= INSTALL
-1. Install from SVN:
-
-   <tt>./script/plugin install http://recordselect.googlecode.com/svn/trunk</tt>
-
-2. Then add the css and javascript to your layout by including the following line:
-
-   <tt><%= record_select_includes %></tt>
-
-3. Enable and configure it on a controller.
-
-   <tt>class UsersController < ApplicationController
-     record_select :per_page => 5, :search_on => 'username'
-   end</tt>
-
-= EXAMPLES
-* <tt><%= link_to_record_select 'Try Me!', 'users', :onselect => 'alert("#" + id + ": " + label)' %></tt>
-
-  Creates a link that toggles a list of users. When clicked, it alerts the id and label of the user.
-
-* <tt><%= record_select_field 'user[user_group]', (@user.user_group || UserGroup.new) %></tt>
-
-  Creates a searchable dropdown of user groups on your user form.
-
-= COMING SOON
-* Keyboard navigation (up/down/enter)
-* Support for multi-select: better interface, standard view helpers.
-* Automated tests. Maybe. Talk about a huge blind spot in my knowledge base...
+Please see the ActionView::Helpers::RecordSelectHelpers for the most common API. More documentation (and HOWTOs) can be found online at http://code.google.com/p/recordselect, and a demo application is available at http://recordselect.googlecode.com/svn/demo.
 
 = DEPENDENCIES
 This depends on the excellent Paginator gem by Bruce Williams. This simple gem is available at paginator.rubyforge.org.
