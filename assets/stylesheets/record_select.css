@@ -90,3 +90,31 @@
 .record-select-autocomplete form .text-input {
   display: none;
 }
+
+.record-select-list {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+
+.record-select-list li {
+  overflow: auto;
+  zoom: 1;
+  margin-left: 10px;
+  font-size: 80%;
+}
+
+.record-select-list label {
+  float: left;
+}
+
+.record-select-list a.remove {
+  display: block;
+  width: 0px;
+  height: 16px;
+  padding-left: 16px;
+  background: url('../../images/record_select/cross.gif') no-repeat 0 0;
+  overflow: hidden;
+  float: left;
+  margin-right: 5px;
+}

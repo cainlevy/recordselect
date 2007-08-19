@@ -209,8 +209,8 @@ RecordSelect.Dialog.prototype = Object.extend(new RecordSelect.Abstract(), {
  * Used by record_select_field helper
  * The options hash may contain id: and label: keys, designating the current value
  */
-RecordSelect.Autocomplete = Class.create();
-RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(), {
+RecordSelect.Single = Class.create();
+RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
   onload: function() {
     // create the hidden input
     new Insertion.After(this.obj, '<input type="hidden" name="" value="" />')
@@ -236,12 +236,12 @@ RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(),
       this.container.down('.text-input').value = this.obj.value;
     }.bind(this));
 
+    // keyboard navigation, if available
     if (this.onkeypress) {
       this.obj.observe('keyup', this.onkeypress.bind(this));
       this.obj.up('form').observe('submit', this.disable_enter_form_submits.bind(this));
     }
   },
-
 
   close: function() {
     // if they close the dialog with the text field empty, then delete the id value
@@ -261,5 +261,71 @@ RecordSelect.Autocomplete.prototype = Object.extend(new RecordSelect.Abstract(),
   set: function(id, label) {
     this.obj.value = label;
     this.hidden_input.value = id;
+  }
+});
+
+/**
+ * Used by record_multi_select_field helper.
+ * Options:
+ *   list - the id (or object) of the <ul> to contain the <li>s of selected entries
+ *   current - an array of id:/label: keys designating the currently selected entries
+ */
+RecordSelect.Multiple = Class.create();
+RecordSelect.Multiple.prototype = Object.extend(new RecordSelect.Abstract(), {
+  onload: function() {
+    // initialize the container
+    this.container = this.create_container();
+    this.container.addClassName('record-select-autocomplete');
+
+    // decide where the <li> entries should be placed
+    if (this.options.list) this.list_container = $(this.options.list);
+    else this.list_container = this.obj.next('ul');
+
+    // take the input name from the text input, and store it for this.add()
+    this.input_name = this.obj.name;
+    this.obj.name = '';
+
+    // initialize the list
+    $A(this.options.current).each(function(c) {
+      this.add(c.id, c.label);
+    }.bind(this));
+
+    // attach the events to start this party
+    this.obj.observe('focus', this.open.bind(this));
+
+    // the autosearch event
+    this.obj.observe('keyup', function() {
+      if (!this.is_open()) return;
+      this.container.down('.text-input').value = this.obj.value;
+    }.bind(this));
+
+    // keyboard navigation, if available
+    if (this.onkeypress) {
+      this.obj.observe('keyup', this.onkeypress.bind(this));
+      this.obj.up('form').observe('submit', this.disable_enter_form_submits.bind(this));
+    }
+  },
+
+  onselect: function(id, value) {
+    this.add(id, value);
+    this.close();
+  },
+
+  /**
+   * Adds a record to the selected list
+   */
+  add: function(id, label) {
+    // return silently if this value has already been selected
+    var already_selected = this.list_container.getElementsBySelector('input').any(function(i) {
+      return i.value == id
+    });
+    if (already_selected) return;
+
+    var entry = '<li>'
+              + '<a href="#" onclick="$(this.parentNode).remove();" class="remove">remove</a>'
+              + '<input type="hidden" name="' + this.input_name + '" value="' + id + '" />'
+              + '<label>' + label + '</label>'
+              + '</li>';
+    new Insertion.Top(this.list_container, entry);
   }
 });

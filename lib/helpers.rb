@@ -32,10 +32,13 @@ module ActionView # :nodoc:
 
       # Adds a RecordSelect-based form field. The field submits the record's id using a hidden input.
       #
-      # *Options*
-      # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
-      # +params+::      A hash of URL parameters
-      # +id+::          The id to use for the input. Defaults based on the input's name.
+      # *Arguments*
+      # +name+:: the input name that will be used to submit the selected record's id.
+      # +current+:: the currently selected object. provide a new record if there're none currently selected and you have not passed the optional :controller argument.
+      # +options+::
+      # * +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
+      # * +params+::      A hash of URL parameters
+      # * +id+::          The id to use for the input. Defaults based on the input's name.
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:params] ||= {}
@@ -52,7 +55,35 @@ module ActionView # :nodoc:
         url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
 
         html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id])
-        html << javascript_tag("new RecordSelect.Autocomplete(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
+        html << javascript_tag("new RecordSelect.Single(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
+
+        return html
+      end
+
+      # Adds a RecordSelect-based form field for multiple selections. The values submit using a list of hidden inputs.
+      #
+      # *Arguments*
+      # +name+:: the input name that will be used to submit the selected records' ids. empty brackets will be appended to the name.
+      # +current+:: pass the current values in Rails' standard [[id, label], [id, label]] format.
+      # +options+::
+      # * +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
+      # * +params+::      A hash of URL parameters
+      # * +id+::          The id to use for the input. Defaults based on the input's name.
+      def record_multi_select_field(name, current, options = {})
+        options[:controller] ||= current.first.class.to_s.pluralize.underscore
+        options[:params] ||= {}
+        options[:id] ||= name.gsub(/[\[\]]/, '_')
+
+        assert_controller_responds(options[:controller])
+
+        # convert each [id, label] pair into {:id => id, :label => label}
+        current = current.inject([]) { |memo, pair| memo.push({:id => pair[0], :label => pair[1]}) }
+
+        url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
+
+        html = text_field_tag("#{name}[]", nil, :autocomplete => 'off', :id => options[:id])
+        html << javascript_tag("new RecordSelect.Multiple(#{options[:id].to_json}, #{url.to_json}, {current: #{current.to_json}});")
+        html << content_tag('ul', '', :class => 'record-select-list');
 
         return html
       end
@@ -84,7 +115,7 @@ module ActionView # :nodoc:
       def assert_controller_responds(controller_name)
         path = params[:controller].split('/')
         path[path.length - 1] = controller_name
-        controller_name = "#{path.join('/').camelize}Controller"        
+        controller_name = "#{path.join('/').camelize}Controller"
         unless controller_name.constantize.uses_record_select?
           raise "#{controller_name} has not been configured to use RecordSelect."
         end
