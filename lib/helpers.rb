@@ -114,9 +114,7 @@ module ActionView # :nodoc:
       private
 
       def assert_controller_responds(controller_name)
-        path = params[:controller].split('/')
-        path[path.length - 1] = controller_name
-        controller_name = "#{path.join('/').camelize}Controller"
+        controller_name = "#{controller_name.camelize}Controller"
         unless controller_name.constantize.uses_record_select?
           raise "#{controller_name} has not been configured to use RecordSelect."
         end
