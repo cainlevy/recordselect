@@ -37,10 +37,24 @@ module RecordSelect
     def record_select_conditions_from_params
       conditions = nil
       params.each do |field, value|
-        next unless record_select_config.model.columns_hash.has_key? field
-        conditions = merge_conditions(conditions, ["LOWER(#{field}) LIKE ?", value])
+        next unless column = record_select_config.model.columns_hash[field]
+        conditions = merge_conditions(
+          conditions,
+          record_select_condition_for_column(column, value)
+        )
       end
       conditions
+    end
+
+    # generates an SQL condition for the given column/value
+    def record_select_condition_for_column(column, value)
+      if value.nil?
+        "#{column.name} IS NULL"
+      elsif column.text?
+        ["LOWER(#{field}) LIKE ?", value]
+      elsif column.number?
+        ["#{field} = ?", value]
+      end
     end
 
     unless method_defined? :merge_conditions # may be provided by ActiveScaffold
