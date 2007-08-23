@@ -25,7 +25,7 @@ module ActionView # :nodoc:
         assert_controller_responds(options[:params][:controller])
 
         html = link_to_function(name, '', options[:html])
-        html << javascript_tag("new RecordSelect.Dialog(#{options[:html][:id].to_json}, #{url_for(options[:params]).to_json}, {onselect: #{options[:onselect]}})")
+        html << javascript_tag("new RecordSelect.Dialog(#{options[:html][:id].to_json}, #{url_for(options[:params]).to_json}, {onselect: #{options[:onselect] || ''}})")
 
         return html
       end

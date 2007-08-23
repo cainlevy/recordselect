@@ -11,6 +11,7 @@ module RecordSelect
       klass = record_select_config.model
       pager = ::Paginator.new(klass.count(:conditions => conditions), record_select_config.per_page) do |offset, per_page|
         klass.find(:all, :offset => offset,
+                         :include => record_select_includes,
                          :limit => per_page,
                          :conditions => conditions,
                          :order => record_select_config.order_by)

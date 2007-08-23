@@ -7,13 +7,17 @@ module RecordSelect
       merge_conditions(
         record_select_conditions_from_search,
         record_select_conditions_from_params,
-        conditions_for_collection
+        record_select_conditions_from_controller
       )
     end
 
     # an override method.
     # here you can provide custom conditions to define the selectable records. useful for situational restrictions.
-    def conditions_for_collection; end
+    def record_select_conditions_from_controller; end
+
+    # another override method.
+    # define any association includes you want for the finder search.
+    def record_select_includes; end
 
     # generate conditions from params[:search]
     # override this if you want to customize the search routine
