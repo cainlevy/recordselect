@@ -9,7 +9,7 @@ module RecordSelect
     def browse
       conditions = record_select_conditions
       klass = record_select_config.model
-      pager = ::Paginator.new(klass.count(:conditions => conditions, :includes => record_select_includes), record_select_config.per_page) do |offset, per_page|
+      pager = ::Paginator.new(klass.count(:conditions => conditions, :include => record_select_includes), record_select_config.per_page) do |offset, per_page|
         klass.find(:all, :offset => offset,
                          :include => record_select_includes,
                          :limit => per_page,
