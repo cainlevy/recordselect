@@ -25,7 +25,7 @@ module ActionView # :nodoc:
         assert_controller_responds(options[:params][:controller])
 
         html = link_to_function(name, '', options[:html])
-        html << javascript_tag("new RecordSelect.Dialog(#{options[:html][:id].to_json}, #{url_for(options[:params]).to_json}, {onselect: #{options[:onselect] || ''}})")
+        html << javascript_tag("new RecordSelect.Dialog(#{options[:html][:id].to_json}, #{url_for(options[:params].merge(:escape => false)).to_json}, {onselect: #{options[:onselect] || ''}})")
 
         return html
       end
@@ -53,7 +53,7 @@ module ActionView # :nodoc:
           label = current.to_label
         end
 
-        url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
+        url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
         html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id], :class => options[:class])
         html << javascript_tag("new RecordSelect.Single(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
@@ -80,7 +80,7 @@ module ActionView # :nodoc:
 
         current = current.inject([]) { |memo, record| memo.push({:id => record.id, :label => record.to_label}) }
 
-        url = url_for({:action => :browse, :controller => options[:controller]}.merge(options[:params]))
+        url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
         html = text_field_tag("#{name}[]", nil, :autocomplete => 'off', :id => options[:id], :class => options[:class])
         html << javascript_tag("new RecordSelect.Multiple(#{options[:id].to_json}, #{url.to_json}, {current: #{current.to_json}});")
