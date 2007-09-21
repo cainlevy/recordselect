@@ -1,6 +1,11 @@
 module RecordSelect
   module Conditions
     protected
+    # returns the combination of all conditions.
+    # conditions come from:
+    # * current search (params[:search])
+    # * intelligent url params (e.g. params[:first_name] if first_name is a model column)
+    # * specific conditions supplied by the developer
     def record_select_conditions
       conditions = []
 
@@ -61,22 +66,9 @@ module RecordSelect
       end
     end
 
-    unless method_defined? :merge_conditions # may be provided by ActiveScaffold
-    def merge_conditions(*conditions)
-      sql, values = [], []
-      conditions.compact.each do |condition|
-        next if condition.empty? # .compact removes nils but it doesn't remove empty arrays.
-        condition = condition.clone
-        # "name = 'Joe'" gets parsed to sql => "name = 'Joe'", values => []
-        # ["name = '?'", 'Joe'] gets parsed to sql => "name = '?'", values => ['Joe']
-        sql << ((condition.is_a? String) ? condition : condition.shift)
-        values += (condition.is_a? String) ? [] : condition
-      end
-      # if there are no values, then simply return the joined sql. otherwise, stick the joined sql onto the beginning of the values array and return that.
-      conditions = values.empty? ? sql.join(" AND ") : values.unshift(sql.join(" AND "))
-      conditions = nil if conditions.empty?
-      conditions
-    end
+    def merge_conditions(*conditions) #:nodoc:
+      c = conditions.find_all {|c| not c.nil? and not c.empty? }
+      c.empty? ? nil : c.collect{|c| ActiveRecord::Base.send(:sanitize_sql, c)}.join(' AND ')
     end
   end
 end

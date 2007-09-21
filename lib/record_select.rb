@@ -9,7 +9,8 @@ module RecordSelect
     def browse
       conditions = record_select_conditions
       klass = record_select_config.model
-      pager = ::Paginator.new(klass.count(:conditions => conditions, :include => record_select_includes), record_select_config.per_page) do |offset, per_page|
+      count = klass.count(:conditions => conditions, :include => record_select_includes)
+      pager = ::Paginator.new(count, record_select_config.per_page) do |offset, per_page|
         klass.find(:all, :offset => offset,
                          :include => record_select_includes,
                          :limit => per_page,
@@ -48,11 +49,11 @@ module RecordSelect
 
     protected
 
-    def record_select_config
+    def record_select_config #:nodoc:
       self.class.record_select_config
     end
 
-    def render_record_select(options = {})
+    def render_record_select(options = {}) #:nodoc:
       options[:layout] ||= false
       if options[:partial]
         render :partial => record_select_path_of(options[:partial]), :layout => options[:layout], :locals => options[:locals]
@@ -82,6 +83,7 @@ module RecordSelect
     # +order_by+::  a SQL string to order the search results
     # +search_on+:: an array of searchable fields
     # +full_text_search+::  a boolean for whether to use a %?% search pattern or not. default is false.
+    # +label+::     a proc that accepts a record as argument and returns an option label. default is to call record.to_label instead.
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})

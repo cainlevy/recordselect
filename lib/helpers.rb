@@ -38,19 +38,19 @@ module ActionView # :nodoc:
       #
       # *Options*
       # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
-      # +params+::      A hash of URL parameters
+      # +params+::      A hash of extra URL parameters
       # +id+::          The id to use for the input. Defaults based on the input's name.
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:params] ||= {}
         options[:id] ||= name.gsub(/[\[\]]/, '_')
 
-        assert_controller_responds(options[:controller])
+        controller = assert_controller_responds(options[:controller])
 
         id = label = ''
         if current and not current.new_record?
           id = current.id
-          label = current.to_label
+          label = controller.record_select_config.label.call(current)
         end
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
@@ -68,17 +68,17 @@ module ActionView # :nodoc:
       # +current+:: pass a collection of existing associated records
       #
       # *Options*
-      # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
-      # +params+::      A hash of URL parameters
+      # +controller+::  The controller configured to provide the result set.
+      # +params+::      A hash of extra URL parameters
       # +id+::          The id to use for the input. Defaults based on the input's name.
       def record_multi_select_field(name, current, options = {})
         options[:controller] ||= current.first.class.to_s.pluralize.underscore
         options[:params] ||= {}
         options[:id] ||= name.gsub(/[\[\]]/, '_')
 
-        assert_controller_responds(options[:controller])
+        controller = assert_controller_responds(options[:controller])
 
-        current = current.inject([]) { |memo, record| memo.push({:id => record.id, :label => record.to_label}) }
+        current = current.inject([]) { |memo, record| memo.push({:id => record.id, :label => label = controller.record_select_config.label.call(record)}) }
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
@@ -90,24 +90,24 @@ module ActionView # :nodoc:
       end
 
       # A helper to render RecordSelect partials
-      def render_record_select(options = {})
+      def render_record_select(options = {}) #:nodoc:
         if options[:partial]
           render :partial => controller.send(:record_select_path_of, options[:partial]), :locals => options[:locals]
         end
       end
 
       # Provides view access to the RecordSelect configuration
-      def record_select_config
+      def record_select_config #:nodoc:
         controller.send :record_select_config
       end
 
       # The id of the RecordSelect widget for the given controller.
-      def record_select_id(controller = nil)
+      def record_select_id(controller = nil) #:nodoc:
         controller ||= params[:controller]
         "record-select-#{controller.gsub('/', '_')}"
       end
 
-      def record_select_search_id(controller = nil)
+      def record_select_search_id(controller = nil) #:nodoc:
         "#{record_select_id(controller)}-search"
       end
 
@@ -115,9 +115,11 @@ module ActionView # :nodoc:
 
       def assert_controller_responds(controller_name)
         controller_name = "#{controller_name.camelize}Controller"
-        unless controller_name.constantize.uses_record_select?
+        controller = controller_name.constantize
+        unless controller.uses_record_select?
           raise "#{controller_name} has not been configured to use RecordSelect."
         end
+        controller
       end
     end
   end

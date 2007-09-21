@@ -14,6 +14,8 @@ module RecordSelect
       @order_by = options[:order_by]
 
       @full_text_search = options[:full_text_search]
+
+      @label = options[:label]
     end
 
     # The model object we're browsing
@@ -43,6 +45,11 @@ module RecordSelect
 
     def full_text_search?
       @full_text_search ? true : false
+    end
+
+    # A proc that accepts a record as argument and returns a descriptive string.
+    def label
+      @label ||= proc {|r| r.to_label}
     end
 
     protected

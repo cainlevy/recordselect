@@ -116,6 +116,25 @@ Object.extend(RecordSelect.Abstract.prototype, {
     e.style.display = 'none';
 
     return $(e);
+  },
+
+  /**
+   * all the behavior to respond to a text field as a search box
+   */
+  _respond_to_text_field: function(text_field) {
+    // attach the events to start this party
+    text_field.observe('focus', this.open.bind(this));
+
+    // the autosearch event
+    text_field.observe('keypress', function() {
+      if (!this.is_open()) return;
+      this.container.down('.text-input').value = text_field.value;
+    }.bind(this));
+
+    // keyboard navigation, if available
+    if (this.onkeypress) {
+      text_field.observe('keypress', this.onkeypress.bind(this));
+    }
   }
 });
 
@@ -156,20 +175,10 @@ Object.extend(RecordSelect.Abstract.prototype, {
       case Event.KEY_ESC:
         this.close();
         break;
+      default:
+        return;
     }
-  },
-
-  /**
-   * In order for the keyboard navigation to completely work when RecordSelect is
-   * inside a form, we need to stop 'enter' from submitting the form when the focus
-   * is on the RecordSelect dialog.
-   *
-   * This method should observe the form's submit event.
-   */
-  disable_enter_form_submits: function(ev) {
-    if (this.is_open() && this.obj == Event.element(ev)) {
-      Event.stop(ev);
-    }
+    Event.stop(ev); // so "enter" doesn't submit the form, among other things(?)
   },
 
   /**
@@ -192,7 +201,7 @@ RecordSelect.Dialog.prototype = Object.extend(new RecordSelect.Abstract(), {
     this.container = this.create_container();
     this.obj.observe('click', this.toggle.bind(this));
 
-    if (this.onkeypress) this.obj.observe('keyup', this.onkeypress.bind(this));
+    if (this.onkeypress) this.obj.observe('keypress', this.onkeypress.bind(this));
   },
 
   onselect: function(id, value) {
@@ -212,6 +221,10 @@ RecordSelect.Dialog.prototype = Object.extend(new RecordSelect.Abstract(), {
 RecordSelect.Single = Class.create();
 RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
   onload: function() {
+    // initialize the container
+    this.container = this.create_container();
+    this.container.addClassName('record-select-autocomplete');
+
     // create the hidden input
     new Insertion.After(this.obj, '<input type="hidden" name="" value="" />')
     this.hidden_input = this.obj.next();
@@ -223,24 +236,7 @@ RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
     // initialize the values
     this.set(this.options.id, this.options.label);
 
-    // initialize the container
-    this.container = this.create_container();
-    this.container.addClassName('record-select-autocomplete');
-
-    // attach the events to start this party
-    this.obj.observe('focus', this.open.bind(this));
-
-    // the autosearch event
-    this.obj.observe('keyup', function() {
-      if (!this.is_open()) return;
-      this.container.down('.text-input').value = this.obj.value;
-    }.bind(this));
-
-    // keyboard navigation, if available
-    if (this.onkeypress) {
-      this.obj.observe('keyup', this.onkeypress.bind(this));
-      this.obj.up('form').observe('submit', this.disable_enter_form_submits.bind(this));
-    }
+    this._respond_to_text_field(this.obj);
   },
 
   close: function() {
@@ -290,20 +286,7 @@ RecordSelect.Multiple.prototype = Object.extend(new RecordSelect.Abstract(), {
       this.add(c.id, c.label);
     }.bind(this));
 
-    // attach the events to start this party
-    this.obj.observe('focus', this.open.bind(this));
-
-    // the autosearch event
-    this.obj.observe('keyup', function() {
-      if (!this.is_open()) return;
-      this.container.down('.text-input').value = this.obj.value;
-    }.bind(this));
-
-    // keyboard navigation, if available
-    if (this.onkeypress) {
-      this.obj.observe('keyup', this.onkeypress.bind(this));
-      this.obj.up('form').observe('submit', this.disable_enter_form_submits.bind(this));
-    }
+    this._respond_to_text_field(this.obj);
   },
 
   onselect: function(id, value) {
