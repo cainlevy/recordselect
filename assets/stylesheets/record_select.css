@@ -85,6 +85,7 @@
 
 .record-select-container {
   position: absolute;
+  z-index: 100;
 }
 
 .record-select-autocomplete form .text-input {
