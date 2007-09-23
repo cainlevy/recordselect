@@ -1,0 +1,18 @@
+1.0rc1
+* helpers complain if the controller they're configured for doesn't use recordselect
+* when using keyboard navigation, hitting "enter" to select a record no longer submits the form
+* if text field is empty when dialog is closed, then recordselect will empty the hidden field as well (lets you deselect)
+* support for multiple selections (record_multi_select_helper)
+* param-based search conditions are smarter - can search numeric fields as well
+* using record_select_conditions_from_controller instead of conditions_for_collection. also added a new record_select_includes override method.
+* helpers now accept a :class option
+* fixed bug with url escaping when helpers were configured with multiple parameters
+* new :label configuration option. it's a proc - the default one calls record.to_label (for backwards compatibility).
+* cleaned up merge_conditions to use activerecord's sanitize_sql.
+* div.record-select-container now has a high z-index so it will by default be visible above other absolutely positioned elements.
+
+0.9
+stuff
+
+0.1
+stuff
