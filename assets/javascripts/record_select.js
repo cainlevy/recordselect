@@ -125,8 +125,8 @@ Object.extend(RecordSelect.Abstract.prototype, {
     // attach the events to start this party
     text_field.observe('focus', this.open.bind(this));
 
-    // the autosearch event
-    text_field.observe('keypress', function() {
+    // the autosearch event - needs to happen slightly late (keyup is later than keypress)
+    text_field.observe('keyup', function() {
       if (!this.is_open()) return;
       this.container.down('.text-input').value = text_field.value;
     }.bind(this));
