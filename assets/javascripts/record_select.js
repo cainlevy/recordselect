@@ -60,9 +60,9 @@ Object.extend(RecordSelect.Abstract.prototype, {
       evalScripts: true,
       asynchronous: true,
       insertion: Insertion.Bottom,
-      onSuccess: function() {
+      onComplete: function() {
         this.show();
-        Element.observe(document.body, 'mousedown', this.onbodyclick.bindAsEventListener(this));
+        Element.observe(document.body, 'click', this.onbodyclick.bindAsEventListener(this));
       }.bind(this)
     });
   },
@@ -75,13 +75,30 @@ Object.extend(RecordSelect.Abstract.prototype, {
     this.container.style.left = offset[0] + 'px';
     this.container.style.top = (Element.getHeight(this.obj) + offset[1]) + 'px';
 
+    if (this._use_iframe_mask()) {
+      this.container.insertAdjacentHTML('afterEnd', '<iframe src="javascript:;" class="record-select-mask" />');
+      var mask = this.container.next('iframe');
+      mask.style.left = this.container.style.left;
+      mask.style.top = this.container.style.top;
+    }
+
     this.container.show();
+
+    if (this._use_iframe_mask()) {
+      var dimensions = this.container.immediateDescendants().first().getDimensions();
+      mask.style.width = dimensions.width + 'px';
+      mask.style.height = dimensions.height + 'px';
+    }
   },
 
   /**
    * closes the recordselect by emptying the container
    */
   close: function() {
+    if (this._use_iframe_mask()) {
+      this.container.next('iframe').remove();
+    }
+
     this.container.hide();
     // hopefully by using remove() instead of innerHTML we won't leak memory
     this.container.immediateDescendants().invoke('remove');
@@ -135,6 +152,10 @@ Object.extend(RecordSelect.Abstract.prototype, {
     if (this.onkeypress) {
       text_field.observe('keypress', this.onkeypress.bind(this));
     }
+  },
+
+  _use_iframe_mask: function() {
+    return this.container.insertAdjacentHTML ? true : false;
   }
 });
 

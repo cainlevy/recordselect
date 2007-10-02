@@ -88,6 +88,12 @@
   z-index: 100;
 }
 
+iframe.record-select-mask {
+  /* to mask windowed elements in IE6 */
+  position: absolute;
+  z-index: 99;
+}
+
 .record-select-autocomplete form .text-input {
   display: none;
 }
