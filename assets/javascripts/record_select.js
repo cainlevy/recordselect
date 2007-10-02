@@ -62,7 +62,7 @@ Object.extend(RecordSelect.Abstract.prototype, {
       insertion: Insertion.Bottom,
       onSuccess: function() {
         this.show();
-        Element.observe(document.body, 'click', this.onbodyclick.bindAsEventListener(this));
+        Element.observe(document.body, 'mousedown', this.onbodyclick.bindAsEventListener(this));
       }.bind(this)
     });
   },
