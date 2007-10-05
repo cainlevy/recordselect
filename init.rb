@@ -1,8 +1,10 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__) + '/lib')
 require 'record_select'
 require 'conditions'
 require 'helpers'
 require 'config'
 require 'extensions/active_record'
+$LOAD_PATH.shift
 
 ActionController::Base.send(:include, RecordSelect)
 ActionView::Base.send(:include, ActionView::Helpers::RecordSelectHelpers)
