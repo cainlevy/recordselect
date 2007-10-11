@@ -57,6 +57,7 @@ Object.extend(RecordSelect.Abstract.prototype, {
     if (this.is_open()) return;
 
     new Ajax.Updater(this.container, this.url, {
+      method: 'get',
       evalScripts: true,
       asynchronous: true,
       insertion: Insertion.Bottom,
