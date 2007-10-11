@@ -55,7 +55,7 @@ module ActionView # :nodoc:
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
-        html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id], :class => options[:class])
+        html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id], :class => options[:class], :onfocus => "this.focused=true", :onblur => "this.focused=false")
         html << javascript_tag("new RecordSelect.Single(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
 
         return html
@@ -82,7 +82,7 @@ module ActionView # :nodoc:
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
-        html = text_field_tag("#{name}[]", nil, :autocomplete => 'off', :id => options[:id], :class => options[:class])
+        html = text_field_tag("#{name}[]", nil, :autocomplete => 'off', :id => options[:id], :class => options[:class], :onfocus => "this.focused=true", :onblur => "this.focused=false")
         html << javascript_tag("new RecordSelect.Multiple(#{options[:id].to_json}, #{url.to_json}, {current: #{current.to_json}});")
         html << content_tag('ul', '', :class => 'record-select-list');
 

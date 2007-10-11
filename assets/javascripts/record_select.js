@@ -259,6 +259,7 @@ RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
     this.set(this.options.id, this.options.label);
 
     this._respond_to_text_field(this.obj);
+    if (this.obj.focused) this.open(); // if it was focused before we could attach observers
   },
 
   close: function() {
@@ -309,6 +310,7 @@ RecordSelect.Multiple.prototype = Object.extend(new RecordSelect.Abstract(), {
     }.bind(this));
 
     this._respond_to_text_field(this.obj);
+    if (this.obj.focused) this.open(); // if it was focused before we could attach observers
   },
 
   onselect: function(id, value) {
