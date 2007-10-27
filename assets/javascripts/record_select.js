@@ -77,7 +77,7 @@ Object.extend(RecordSelect.Abstract.prototype, {
     this.container.style.top = (Element.getHeight(this.obj) + offset[1]) + 'px';
 
     if (this._use_iframe_mask()) {
-      this.container.insertAdjacentHTML('afterEnd', '<iframe src="javascript:;" class="record-select-mask" />');
+      this.container.insertAdjacentHTML('afterEnd', '<iframe src="javascript:false;" class="record-select-mask" />');
       var mask = this.container.next('iframe');
       mask.style.left = this.container.style.left;
       mask.style.top = this.container.style.top;

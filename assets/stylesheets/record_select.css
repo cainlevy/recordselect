@@ -92,6 +92,7 @@ iframe.record-select-mask {
   /* to mask windowed elements in IE6 */
   position: absolute;
   z-index: 99;
+  filter: progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);
 }
 
 .record-select-autocomplete form .text-input {
