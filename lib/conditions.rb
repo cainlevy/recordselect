@@ -42,6 +42,18 @@ module RecordSelect
       end
     end
 
+    # instead of a shotgun approach, this assumes the user is
+    # searching vs some SQL field (possibly built with CONCAT())
+    # similar to the record labels.
+#    def record_select_simple_conditions_from_search
+#      return unless params[:search] and not params[:search].empty?
+#
+#      search_pattern = record_select_config.full_text_search? ? '%?%' : '?%'
+#      search_string = search_pattern.sub('?', value.downcase)
+#
+#      ["LOWER(#{record_select_config.search_on})", search_pattern.sub('?', value.downcase)]
+#    end
+
     # generate conditions from the url parameters (e.g. users/browse?group_id=5)
     def record_select_conditions_from_params
       conditions = nil

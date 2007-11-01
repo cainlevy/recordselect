@@ -40,6 +40,7 @@ module ActionView # :nodoc:
       # +controller+::  The controller configured to provide the result set. Optional if you have standard resource controllers (e.g. UsersController for the User model), in which case the controller will be inferred from the class of +current+ (the second argument)
       # +params+::      A hash of extra URL parameters
       # +id+::          The id to use for the input. Defaults based on the input's name.
+      # +onchange+::    A JavaScript function that will be called whenever something new is selected. It should accept the new id as the first argument, and the new label as the second argument. For example, you could set onchange to be "function(id, label) {alert(id);}", or you could create a JavaScript function somewhere else and set onchange to be "my_function" (without the parantheses!).
       def record_select_field(name, current, options = {})
         options[:controller] ||= current.class.to_s.pluralize.underscore
         options[:params] ||= {}
@@ -56,7 +57,7 @@ module ActionView # :nodoc:
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
         html = text_field_tag(name, nil, :autocomplete => 'off', :id => options[:id], :class => options[:class], :onfocus => "this.focused=true", :onblur => "this.focused=false")
-        html << javascript_tag("new RecordSelect.Single(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}});")
+        html << javascript_tag("new RecordSelect.Single(#{options[:id].to_json}, #{url.to_json}, {id: #{id.to_json}, label: #{label.to_json}, onchange: #{options[:onchange] || ''}});")
 
         return html
       end

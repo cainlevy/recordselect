@@ -239,6 +239,7 @@ RecordSelect.Dialog.prototype = Object.extend(new RecordSelect.Abstract(), {
 /**
  * Used by record_select_field helper
  * The options hash may contain id: and label: keys, designating the current value
+ * The options hash may also include an onchange: key, where the value is a javascript function (or eval-able string) for an callback routine.
  */
 RecordSelect.Single = Class.create();
 RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
@@ -270,6 +271,7 @@ RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
   },
 
   onselect: function(id, value) {
+    if (this.options.onchange) this.options.onchange(id, value);
     this.set(id, value);
     this.close();
   },
