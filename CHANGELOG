@@ -1,3 +1,10 @@
+1.0
+* record_select_field always searches on the latest string
+* R.S. dialog closes on mousedown instead of click (because sometimes clicks are intercepted)
+* R.S. layers over <select> boxes in IE 6
+* record_select_field now opens R.S. even when the field loads with focus
+* new :onchange option for record_select_field, to observe selection events
+
 1.0rc1
 * helpers complain if the controller they're configured for doesn't use recordselect
 * when using keyboard navigation, hitting "enter" to select a record no longer submits the form
