@@ -18,7 +18,7 @@ next_url = url_for(pagination_url_params.merge(:page => page.next.number, :escap
   <% page.items.each do |record| -%>
   <li class="record <%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
     <% url = url_for(url_params.merge(:id => record.id, :escape => false)) -%>
-    <%= link_to_remote h(record_select_config.label.call(record)),
+    <%= link_to_remote render_record_from_config(record),
                         {:url => url,
                         :method => :post,
                         :before => 'Element.toggleClassName(this, "selected")',

@@ -10,7 +10,7 @@ RecordSelect.notify = function(item) {
   if (onselect)
   {
     try {
-      onselect(item.parentNode.id.substr(2), item.innerHTML, e);
+      onselect(item.parentNode.id.substr(2), (item.down('label') || item).innerHTML, e);
     } catch(e) {
       alert(e);
     }

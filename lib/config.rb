@@ -47,7 +47,23 @@ module RecordSelect
       @full_text_search ? true : false
     end
 
-    # A proc that accepts a record as argument and returns a descriptive string.
+    # If a proc, must accept the record as an argument and return a descriptive string.
+    #
+    # If a symbol or string, must name a partial that renders a representation of the
+    # record. The partial should assume a local "record" variable, and should include a
+    # <label> tag, even if it's not visible. The contents of the <label> tag will be used
+    # to represent the record once it has been selected. For example:
+    #
+    #   record_select_config.label = :user_description
+    #
+    # > app/views/users/_user_description.erb
+    #
+    #   <div class="user_description">
+    #     <%= image_tag url_for_file_column(record, 'avatar') %>
+    #     <label><%= record.username %></label>
+    #     <p><%= record.quote %></p>
+    #   </div>
+    #
     def label
       @label ||= proc {|r| r.to_label}
     end

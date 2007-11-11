@@ -51,7 +51,7 @@ module ActionView # :nodoc:
         id = label = ''
         if current and not current.new_record?
           id = current.id
-          label = controller.record_select_config.label.call(current)
+          label = label_for_field(current, controller)
         end
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
@@ -79,7 +79,7 @@ module ActionView # :nodoc:
 
         controller = assert_controller_responds(options[:controller])
 
-        current = current.inject([]) { |memo, record| memo.push({:id => record.id, :label => label = controller.record_select_config.label.call(record)}) }
+        current = current.inject([]) { |memo, record| memo.push({:id => record.id, :label => label_for_field(record, controller)}) }
 
         url = url_for({:action => :browse, :controller => options[:controller], :escape => false}.merge(options[:params]))
 
@@ -113,6 +113,37 @@ module ActionView # :nodoc:
       end
 
       private
+
+      # uses renderer (defaults to record_select_config.label) to determine how the given record renders.
+      def render_record_from_config(record, renderer = record_select_config.label)
+        case renderer
+          when Symbol, String
+          # return full-html from the named partial
+          render :partial => renderer.to_s, :locals => {:record => record}
+
+          when Proc
+          # return an html-cleaned descriptive string
+          h renderer.call(record)
+        end
+      end
+
+      # uses the result of render_record_from_config to snag an appropriate record label
+      # to display in a field.
+      #
+      # if given a controller, searches for a partial in its views path
+      def label_for_field(record, controller = self.controller)
+        renderer = controller.record_select_config.label
+        case renderer
+          when Symbol, String
+          # find the <label> element and grab its innerHTML
+          description = render_record_from_config(record, File.join(controller.controller_path, renderer.to_s))
+          description.match(/<label[^>]*>(.*)<\/label>/)[1]
+
+          when Proc
+          # just return the string
+          render_record_from_config(record, renderer)
+        end
+      end
 
       def assert_controller_responds(controller_name)
         controller_name = "#{controller_name.camelize}Controller"
