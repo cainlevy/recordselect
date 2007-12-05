@@ -63,7 +63,8 @@ Object.extend(RecordSelect.Abstract.prototype, {
       insertion: Insertion.Bottom,
       onComplete: function() {
         this.show();
-        Element.observe(document.body, 'click', this.onbodyclick.bindAsEventListener(this));
+        // needs to be mousedown so the event doesn't get canceled by other code (see issue #26)
+        Element.observe(document.body, 'mousedown', this.onbodyclick.bindAsEventListener(this));
       }.bind(this)
     });
   },
