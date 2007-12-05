@@ -62,6 +62,23 @@ module ActionView # :nodoc:
         return html
       end
 
+      # Assists with the creation of an observer for the :onchange option of the record_select_field method.
+      # Currently only supports building an Ajax.Request based on the id of the selected record.
+      #
+      # options[:url] should be a hash with all the necessary options *except* :id. that parameter
+      # will be provided based on the selected record.
+      #
+      # Question: if selecting users, what's more likely?
+      #   /users/5/categories
+      #   /categories?user_id=5
+      def record_select_observer(options = {})
+        fn = ""
+        fn << "function(id, value) {"
+        fn <<   "var url = #{url_for(options[:url].merge(:id => ":id:")).to_json}.replace(/:id:/, id);"
+        fn <<   "new Ajax.Request(url);"
+        fn << "}"
+      end
+
       # Adds a RecordSelect-based form field for multiple selections. The values submit using a list of hidden inputs.
       #
       # *Arguments*
