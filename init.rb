@@ -3,6 +3,7 @@ require 'record_select'
 require 'conditions'
 require 'helpers'
 require 'config'
+require 'localization'
 require 'extensions/active_record'
 $LOAD_PATH.shift
 
