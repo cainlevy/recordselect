@@ -1,14 +1,8 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__) + '/lib')
-require 'record_select'
-require 'conditions'
-require 'helpers'
-require 'config'
-require 'localization'
-require 'extensions/active_record'
-$LOAD_PATH.shift
+require File.dirname(__FILE__) + '/lib/localization'
+require File.dirname(__FILE__) + '/lib/extensions/active_record'
 
 ActionController::Base.send(:include, RecordSelect)
-ActionView::Base.send(:include, ActionView::Helpers::RecordSelectHelpers)
+ActionView::Base.send(:include, RecordSelect::Helpers)
 
 ['stylesheets', 'images', 'javascripts'].each do |asset_type|
   public_dir = File.join(RAILS_ROOT, 'public', asset_type, 'record_select')

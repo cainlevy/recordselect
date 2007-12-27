@@ -31,6 +31,7 @@
   margin: 0px;
   padding: 0px;
   list-style: none;
+  clear: both;
 }
 
 .record-select a {
