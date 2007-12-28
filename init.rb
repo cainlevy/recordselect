@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/lib/extensions/active_record'
 
 ActionController::Base.send(:include, RecordSelect)
 ActionView::Base.send(:include, RecordSelect::Helpers)
+ActionView::Helpers::FormBuilder.send(:include, RecordSelect::FormBuilder)
 
 ['stylesheets', 'images', 'javascripts'].each do |asset_type|
   public_dir = File.join(RAILS_ROOT, 'public', asset_type, 'record_select')
