@@ -72,9 +72,9 @@ module RecordSelect
       if value.nil?
         "#{column.name} IS NULL"
       elsif column.text?
-        ["LOWER(#{field}) LIKE ?", value]
-      elsif column.number?
-        ["#{field} = ?", value]
+        ["LOWER(#{column.name}) LIKE ?", value]
+      else
+        ["#{column.name} = ?", column.type_cast(value)]
       end
     end
 
