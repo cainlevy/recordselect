@@ -6,10 +6,9 @@
 
 <script type="text/javascript">
 //<![CDATA[
-  var i = $(<%= record_select_search_id.to_json %>).down('input.text-input');
-  new Form.Element.Observer(i, 1.0, function(element, value) {
-    element.up('form').onsubmit();
-    return false;
-  });
+var i = $(<%= record_select_search_id.to_json %>).down('input.text-input');
+Form.Element.AfterActivity(i, function() {
+  $(<%= record_select_search_id.to_json %>).onsubmit();
+}, 0.35);
 //]]>
 </script>

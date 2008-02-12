@@ -1,5 +1,17 @@
 Event.observe(window, 'load', function() {RecordSelect.document_loaded = true});
 
+Form.Element.AfterActivity = function(element, callback, delay) {
+  element = $(element);
+  if (!delay) delay = 0.25;
+  new Form.Element.Observer(element, delay, function(element, value) {
+    // TODO: display loading indicator
+    if (element.activity_timer) clearTimeout(element.activity_timer);
+    element.activity_timer = setTimeout(function() {
+      callback(element.value);
+    }, delay * 1000 + 50);
+  });
+}
+
 var RecordSelect = new Object();
 RecordSelect.document_loaded = false;
 
