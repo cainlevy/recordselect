@@ -16,6 +16,8 @@ module RecordSelect
       @full_text_search = options[:full_text_search]
 
       @label = options[:label]
+
+      @include = options[:include]
     end
 
     # The model object we're browsing
@@ -45,6 +47,10 @@ module RecordSelect
 
     def full_text_search?
       @full_text_search ? true : false
+    end
+
+    def include
+      @include
     end
 
     # If a proc, must accept the record as an argument and return a descriptive string.

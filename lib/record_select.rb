@@ -14,6 +14,7 @@ module RecordSelect
     # +search_on+:: an array of searchable fields
     # +full_text_search+::  a boolean for whether to use a %?% search pattern or not. default is false.
     # +label+::     a proc that accepts a record as argument and returns an option label. default is to call record.to_label instead.
+    # +include+::   as for ActiveRecord::Base#find. can help with search conditions or just help optimize rendering the results.
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})
