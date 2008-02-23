@@ -344,7 +344,7 @@ RecordSelect.Multiple.prototype = Object.extend(new RecordSelect.Abstract(), {
     if (already_selected) return;
 
     var entry = '<li>'
-              + '<a href="#" onclick="$(this.parentNode).remove();" class="remove">remove</a>'
+              + '<a href="#" onclick="$(this.parentNode).remove(); return false;" class="remove">remove</a>'
               + '<input type="hidden" name="' + this.input_name + '" value="' + id + '" />'
               + '<label>' + label + '</label>'
               + '</li>';
