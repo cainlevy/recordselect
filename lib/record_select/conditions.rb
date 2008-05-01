@@ -69,7 +69,7 @@ module RecordSelect
 
     # generates an SQL condition for the given column/value
     def record_select_condition_for_column(column, value)
-      if value.nil?
+      if value.blank? and column.null
         "#{column.name} IS NULL"
       elsif column.text?
         ["LOWER(#{column.name}) LIKE ?", value]
