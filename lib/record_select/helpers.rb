@@ -107,10 +107,10 @@ module RecordSelect
     end
 
     # A helper to render RecordSelect partials
-    def render_record_select(options = {}) #:nodoc:
-      if options[:partial]
-        render :partial => controller.send(:record_select_path_of, options[:partial]), :locals => options[:locals]
-      end
+    def render_record_select(file, options = {}) #:nodoc:
+      options[:file] = controller.send(:record_select_path_of, file)
+      options[:use_full_path] = false
+      render options
     end
 
     # Provides view access to the RecordSelect configuration

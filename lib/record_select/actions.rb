@@ -16,12 +16,12 @@ module RecordSelect
       @page = pager.page(params[:page] || 1)
 
       respond_to do |wants|
-        wants.html { render_record_select :partial => 'browse', :layout => true }
+        wants.html { render_record_select '_browse.html', :layout => true }
         wants.js {
           if params[:update]
-            render_record_select :action => 'browse.rjs'
+            render_record_select 'browse.rjs'
           else
-            render_record_select :partial => 'browse'
+            render_record_select '_browse.rhtml'
           end
         }
         wants.yaml {}
@@ -49,23 +49,21 @@ module RecordSelect
       self.class.record_select_config
     end
 
-    def render_record_select(options = {}) #:nodoc:
+    def render_record_select(file, options = {}) #:nodoc:
       options[:layout] ||= false
-      if options[:partial]
-        render :partial => record_select_path_of(options[:partial]), :layout => options[:layout], :locals => options[:locals]
-      elsif options[:action]
-        render :template => record_select_path_of(options[:action]), :layout => options[:layout], :locals => options[:locals]
-      end
+      options[:file] = record_select_path_of(file)
+      options[:use_full_path] = false
+      render options
     end
 
     private
 
     def record_select_views_path
-      @record_select_views_path ||= "../../vendor/plugins/#{File.expand_path(__FILE__).match(/vendor\/plugins\/(\w*)/)[1]}/lib/views"
+      @record_select_views_path ||= "vendor/plugins/#{File.expand_path(__FILE__).match(/vendor\/plugins\/(\w*)/)[1]}/lib/views"
     end
 
     def record_select_path_of(template)
-      File.join(record_select_views_path, template)
+      File.join(RAILS_ROOT, record_select_views_path, template)
     end
   end
 end
