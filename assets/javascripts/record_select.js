@@ -72,7 +72,6 @@ Object.extend(RecordSelect.Abstract.prototype, {
       method: 'get',
       evalScripts: true,
       asynchronous: true,
-      insertion: Insertion.Bottom,
       onComplete: function() {
         this.show();
         // needs to be mousedown so the event doesn't get canceled by other code (see issue #26)
