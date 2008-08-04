@@ -29,8 +29,8 @@ module RecordSelect
     def record_select_conditions_from_search
       search_pattern = record_select_config.full_text_search? ? '%?%' : '?%'
 
-      if params[:search] and !params[:search].empty?
-        tokens = params[:search].split(' ')
+      if params[:search] and !params[:search].strip.empty?
+        tokens = params[:search].strip.split(' ')
 
         where_clauses = record_select_config.search_on.collect { |sql| "LOWER(#{sql}) LIKE ?" }
         phrase = "(#{where_clauses.join(' OR ')})"
