@@ -80,7 +80,7 @@ module RecordSelect
 
     def merge_conditions(*conditions) #:nodoc:
       c = conditions.find_all {|c| not c.nil? and not c.empty? }
-      c.empty? ? nil : c.collect{|c| ActiveRecord::Base.send(:sanitize_sql, c)}.join(' AND ')
+      c.empty? ? nil : c.collect{|c| record_select_config.model.send(:sanitize_sql, c)}.join(' AND ')
     end
   end
 end
