@@ -8,8 +8,7 @@ module RecordSelect
 
       @per_page = options[:per_page]
 
-      options[:search_on] = [options[:search_on]] if options[:search_on] and not options[:search_on].is_a? Array
-      @search_on = options[:search_on]
+      @search_on = [options[:search_on]].flatten
 
       @order_by = options[:order_by]
 
@@ -37,6 +36,7 @@ module RecordSelect
     end
 
     # A collection of fields to search. This is essentially raw SQL, so you could search on "CONCAT(first_name, ' ', last_name)" if you wanted to.
+    # NOTE: this does *NO* default transforms (such as LOWER()), that's left entirely up to you.
     def search_on
       @search_on ||= self.model.columns.collect{|c| c.name if [:text, :string].include? c.type}.compact
     end
