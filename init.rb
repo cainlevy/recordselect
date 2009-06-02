@@ -2,7 +2,6 @@ require File.dirname(__FILE__) + '/lib/localization'
 require File.dirname(__FILE__) + '/lib/extensions/active_record'
 
 ActionController::Base.send(:include, RecordSelect)
-ActionView::Base.send(:include, RecordSelect::Helpers)
 ActionView::Helpers::FormBuilder.send(:include, RecordSelect::FormBuilder)
 
 ['stylesheets', 'images', 'javascripts'].each do |asset_type|
