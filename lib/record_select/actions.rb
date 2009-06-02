@@ -49,21 +49,19 @@ module RecordSelect
       self.class.record_select_config
     end
 
-    def render_record_select(file, options = {}) #:nodoc:
-      options[:layout] ||= false
-      options[:file] = record_select_path_of(file)
-      options[:use_full_path] = false
-      render options
+    def render_record_select(options = {}) #:nodoc:
+      [:template,:partial].each do |template_name|
+        if options[template_name] then
+          options[template_name] = File.join(record_select_views_path, options[template_name])
+        end
+      end
+      if block_given? then yield options else render options end
     end
 
     private
 
     def record_select_views_path
       "record_select"
-    end
-
-    def record_select_path_of(template)
-      File.join(record_select_views_path, template)
     end
   end
 end
