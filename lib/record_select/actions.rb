@@ -5,8 +5,8 @@ module RecordSelect
     def browse
       conditions = record_select_conditions
       klass = record_select_config.model
-      count = klass.count(:conditions => conditions, :include => record_select_includes)
-      pager = ::Paginator.new(count, record_select_config.per_page) do |offset, per_page|
+      @count = klass.count(:conditions => conditions, :include => record_select_includes)
+      pager = ::Paginator.new(@count, record_select_config.per_page) do |offset, per_page|
         klass.find(:all, :offset => offset,
                          :include => [record_select_includes, record_select_config.include].flatten.compact,
                          :limit => per_page,
@@ -16,12 +16,12 @@ module RecordSelect
       @page = pager.page(params[:page] || 1)
 
       respond_to do |wants|
-        wants.html { render_record_select '_browse.html', :layout => true }
+        wants.html { render_record_select :partial => 'browse'}
         wants.js {
           if params[:update]
-            render_record_select 'browse.rjs'
+            render_record_select :template => 'browse', :format => :js, :layout => false
           else
-            render_record_select '_browse.rhtml'
+            render_record_select :partial => 'browse'
           end
         }
         wants.yaml {}
