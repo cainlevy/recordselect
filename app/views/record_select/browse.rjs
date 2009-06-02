@@ -1,4 +1,4 @@
-page.assign "data", render_record_select('_list.rhtml', :locals => {:page => @page})
+page.assign "data", render_record_select(:partial => 'list', :locals => {:page => @page})
 page.assign "elem", page.literal("$$('##{record_select_id} ol')[0]")
 
 page << %|if (elem) {Element.replace(elem, data)}|
