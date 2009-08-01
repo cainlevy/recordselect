@@ -121,7 +121,7 @@ Object.extend(RecordSelect.Abstract.prototype, {
    * returns true/false for whether the recordselect is open
    */
   is_open: function() {
-    return (this.container.childNodes.length > 0)
+	  return (!this.container.innerHTML.blank())
   },
 
   /**
