@@ -15,6 +15,9 @@ module RecordSelect
     # +full_text_search+::  a boolean for whether to use a %?% search pattern or not. default is false.
     # +label+::     a proc that accepts a record as argument and returns an option label. default is to call record.to_label instead.
     # +include+::   as for ActiveRecord::Base#find. can help with search conditions or just help optimize rendering the results.
+    # +link+::      a boolean for whether wrap the text returned by label in a link or not. default is true. set to false when
+    #               label returns html code which can't be inside a tag. You can use record_select_link_to_select in your proc
+    #               or partial to add a link to select action
     #
     # You may also pass a block, which will be used as options[:notify].
     def record_select(options = {})

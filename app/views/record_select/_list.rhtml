@@ -1,6 +1,5 @@
 <%
 controller ||= params[:controller]
-url_params = {:controller => controller, :action => :select}
 
 pagination_url_params = params.merge(:controller => controller, :action => :browse, :search => params[:search], :update => 1)
 prev_url = url_for(pagination_url_params.merge(:page => page.prev.number, :escape => false)) if page.prev?
@@ -19,13 +18,7 @@ page.pager.per_page),
   <% end -%>
   <% page.items.each do |record| -%>
   <li class="record <%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
-    <% url = url_for(url_params.merge(:id => record.id, :escape => false)) -%>
-    <%= link_to_remote render_record_from_config(record),
-                        {:url => url,
-                        :method => :post,
-                        :before => 'Element.toggleClassName(this, "selected")',
-                        :condition => "RecordSelect.notify(this)"},
-                        {:href => url} %>
+    <%= render_record_from_config(record) %>
   </li>
   <% end -%>
   <% if page.next? -%>
