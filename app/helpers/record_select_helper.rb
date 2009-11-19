@@ -140,7 +140,7 @@ module RecordSelectHelper
   private
 
   # uses renderer (defaults to record_select_config.label) to determine how the given record renders.
-  def render_record_from_config(record, renderer = record_select_config.label)
+  def render_record_from_config(record, renderer = record_select_config.label, link = record_select_config.link?)
     text = case renderer
     when Symbol, String
       # return full-html from the named partial
@@ -150,7 +150,7 @@ module RecordSelectHelper
       # return an html-cleaned descriptive string
       h renderer.call(record)
     end
-    record_select_config.link? ? record_select_link_to_select(text, record) : text
+    link ? record_select_link_to_select(text, record) : text
   end
 
   # uses the result of render_record_from_config to snag an appropriate record label
@@ -159,15 +159,16 @@ module RecordSelectHelper
   # if given a controller, searches for a partial in its views path
   def label_for_field(record, controller = self.controller)
     renderer = controller.record_select_config.label
+    link = controller.record_select_config.link?
     case renderer
     when Symbol, String
       # find the <label> element and grab its innerHTML
-      description = render_record_from_config(record, File.join(controller.controller_path, renderer.to_s))
+      description = render_record_from_config(record, File.join(controller.controller_path, renderer.to_s), link)
       description.match(/<label[^>]*>(.*)<\/label>/)[1]
 
     when Proc
       # just return the string
-      render_record_from_config(record, renderer)
+      render_record_from_config(record, renderer, link)
     end
   end
 
