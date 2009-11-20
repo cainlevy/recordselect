@@ -105,16 +105,6 @@ module RecordSelectHelper
     return html
   end
 
-  def record_select_link_to_select(text, record)
-    url_params = {:controller => controller, :action => :select, :id => record.id, :escape => false}
-    link_to_remote text, {
-        :url => url_params,
-        :method => :post,
-        :before => 'Element.toggleClassName(this, "selected")',
-        :condition => "RecordSelect.notify(this)"
-        }, :href => url_params
-  end
-
   # A helper to render RecordSelect partials
   def render_record_select(options = {}) #:nodoc:
     controller.send(:render_record_select, options) do |options|
@@ -138,10 +128,26 @@ module RecordSelectHelper
   end
 
   private
+  # render the record using the renderer and add a link to select the record
+  def render_record_in_list(record, controller_path)
+    text = render_record_from_config(record)
+    if record_select_config.link?
+      url_params = {:controller => controller_path, :action => :select, :id => record.id, :escape => false}
+      link_to_remote text, {
+          :url => url_params,
+          :method => :post,
+          :before => 'Element.toggleClassName(this, "selected")',
+          :condition => "RecordSelect.notify(this)"
+        }, :href => url_params
+    else
+      text
+    end
+  end
+
 
   # uses renderer (defaults to record_select_config.label) to determine how the given record renders.
-  def render_record_from_config(record, renderer = record_select_config.label, link = record_select_config.link?)
-    text = case renderer
+  def render_record_from_config(record, renderer = record_select_config.label)
+    case renderer
     when Symbol, String
       # return full-html from the named partial
       render :partial => renderer.to_s, :locals => {:record => record}
@@ -150,7 +156,6 @@ module RecordSelectHelper
       # return an html-cleaned descriptive string
       h renderer.call(record)
     end
-    link ? record_select_link_to_select(text, record) : text
   end
 
   # uses the result of render_record_from_config to snag an appropriate record label
