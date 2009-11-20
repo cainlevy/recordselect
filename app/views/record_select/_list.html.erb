@@ -18,7 +18,7 @@ page.pager.per_page),
   <% end -%>
   <% page.items.each do |record| -%>
   <li class="record <%= cycle 'odd', 'even' %>" id="rs<%= record.id -%>">
-    <%= render_record_from_config(record) %>
+    <%= render_record_in_list(record, controller) %>
   </li>
   <% end -%>
   <% if page.next? -%>
