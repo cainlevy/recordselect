@@ -22,7 +22,7 @@ RecordSelect.notify = function(item) {
   if (onselect)
   {
     try {
-      onselect(item.parentNode.id.substr(2), (item.down('label') || item).innerHTML, e);
+      onselect(item.parentNode.id.substr(2), (item.down('label') || item).innerHTML.unescapeHTML(), e);
     } catch(e) {
       alert(e);
     }
@@ -292,7 +292,7 @@ RecordSelect.Single.prototype = Object.extend(new RecordSelect.Abstract(), {
    * sets the id/label
    */
   set: function(id, label) {
-    this.obj.value = label;
+    this.obj.value = label.unescapeHTML();
     this.hidden_input.value = id;
   }
 });
