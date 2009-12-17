@@ -164,16 +164,15 @@ module RecordSelectHelper
   # if given a controller, searches for a partial in its views path
   def label_for_field(record, controller = self.controller)
     renderer = controller.record_select_config.label
-    link = controller.record_select_config.link?
     case renderer
     when Symbol, String
       # find the <label> element and grab its innerHTML
-      description = render_record_from_config(record, File.join(controller.controller_path, renderer.to_s), link)
+      description = render_record_from_config(record, File.join(controller.controller_path, renderer.to_s))
       description.match(/<label[^>]*>(.*)<\/label>/)[1]
 
     when Proc
       # just return the string
-      render_record_from_config(record, renderer, link)
+      render_record_from_config(record, renderer)
     end
   end
 
