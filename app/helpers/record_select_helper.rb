@@ -5,7 +5,7 @@ module RecordSelectHelper
     includes = ''
     includes << stylesheet_link_tag('record_select/record_select')
     includes << javascript_include_tag('record_select/record_select')
-    includes
+    includes.html_safe
   end
 
   # Adds a link on the page that toggles a RecordSelect widget from the given controller.
