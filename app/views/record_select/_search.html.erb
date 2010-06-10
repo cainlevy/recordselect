@@ -1,8 +1,7 @@
 <% url_options = params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1, :escape => false) -%>
-  <% Rails.logger.info("inspect: #{url_options.inspect}") %>
-  <% form_tag url_options, {:method => :get, :remote => true, :id => record_select_search_id} do %>
+<%= form_tag url_options, {:method => :get, :remote => true, :id => record_select_search_id}  -%>
   <%= text_field_tag 'search', params[:search], :autocomplete => 'off', :class => 'text-input' %>
-<% end %>
+</form>
 
 <script type="text/javascript">
 //<![CDATA[
