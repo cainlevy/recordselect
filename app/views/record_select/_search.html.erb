@@ -1,14 +1,14 @@
-<% search_url = url_for(params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1, :escape => false)) -%>
-<% form_remote_tag :url => search_url, :method => :get,
-                   :html => { :action => search_url, :id => record_select_search_id } do %>
+<% url_options = params.merge(:controller => controller, :action => :browse, :page => 1, :update => 1, :escape => false) -%>
+  <% Rails.logger.info("inspect: #{url_options.inspect}") %>
+  <% form_tag url_options, {:method => :get, :remote => true, :id => record_select_search_id} do %>
   <%= text_field_tag 'search', params[:search], :autocomplete => 'off', :class => 'text-input' %>
 <% end %>
 
 <script type="text/javascript">
 //<![CDATA[
-var i = $(<%= record_select_search_id.to_json %>).down('input.text-input');
+var i = $(<%= record_select_search_id.to_json.html_safe %>).down('input.text-input');
 Form.Element.AfterActivity(i, function() {
-  $(<%= record_select_search_id.to_json %>).onsubmit();
+  $(<%= record_select_search_id.to_json.html_safe %>).onsubmit();
 }, 0.35);
 //]]>
 </script>

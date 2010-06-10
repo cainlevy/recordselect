@@ -1,4 +1,17 @@
-Event.observe(window, 'load', function() {RecordSelect.document_loaded = true});
+document.observe("dom:loaded", function() {
+  RecordSelect.document_loaded = true;
+  document.on('ajax:before', 'div.record-select * li a', function(event) {
+    var link = event.findElement();
+    if (link) {
+      if (RecordSelect.notify(link) == false) {
+        event.stop();
+      } else {
+        link.toggleClassName("selected");
+      }
+    }
+    return true;
+  });  
+});    
 
 Form.Element.AfterActivity = function(element, callback, delay) {
   element = $(element);

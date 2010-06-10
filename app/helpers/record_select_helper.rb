@@ -132,13 +132,8 @@ module RecordSelectHelper
   def render_record_in_list(record, controller_path)
     text = render_record_from_config(record)
     if record_select_config.link?
-      url_params = {:controller => controller_path, :action => :select, :id => record.id, :escape => false}
-      link_to_remote text, {
-          :url => url_params,
-          :method => :post,
-          :before => 'Element.toggleClassName(this, "selected")',
-          :condition => "RecordSelect.notify(this)"
-        }, :href => url_params
+      url_options = {:controller => controller_path, :action => :select, :id => record.id, :escape => false}
+      link_to text, url_options, :method => :post, :remote => true, :class => ''
     else
       text
     end
