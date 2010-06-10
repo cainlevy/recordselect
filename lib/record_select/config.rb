@@ -8,7 +8,7 @@ module RecordSelect
 
       @per_page = options[:per_page]
 
-      @search_on = [options[:search_on]].flatten
+      @search_on = [options[:search_on]].flatten unless options[:search_on].nil?
 
       @order_by = options[:order_by]
 
