@@ -44,7 +44,7 @@ module RecordSelect
     end
 
     def order_by
-      @order_by ||= "#{model.primary_key} ASC"
+      @order_by ||= "#{model.table_name}#{model.primary_key} ASC"
     end
 
     def full_text_search?
