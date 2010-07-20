@@ -72,7 +72,8 @@ module RecordSelectHelper
   def record_select_observer(options = {})
     fn = ""
     fn << "function(id, value) {"
-    fn <<   "var url = #{url_for(options[:url].merge(:id => ":id:")).to_json}.replace(/:id:/, id);"
+    #Replaces :id: but in url encoded format.
+    fn <<   "var url = #{url_for(options[:url].merge(:id => ":id:")).to_json}.replace(/%3Aid%3A/, id);"    
     fn <<   "new Ajax.Request(url);"
     fn << "}"
   end
